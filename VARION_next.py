@@ -104,7 +104,7 @@ for i in xrange(0,len(stations)):
     sIP_G_list = []
     for sa in sats:     
         lista_G.append(mI.iono(lista_obs, sa))
-        sIP_G = mS.track(sIP, sa, cut_off=False)
+        sIP_G = mS.track(sIP, sa)
         sIP_G_list.append(sIP_G)
 
     #sIP_G_temp = mS.track_temp(sIP_G, tsunami - 100, tsunami + 8000, txt_file=True)

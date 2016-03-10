@@ -12,7 +12,7 @@
 ## IMPORT MODULES AND CLASSES ##
 import argparse  
 #import datetime                     # Import datetime class
-#import os                           # Import os related functions 
+import os                           # Import os related functions 
 #import sys
 import glob
 import numpy as np
@@ -54,7 +54,13 @@ const_tec = ((L1**2)*(L2**2))/(A*(L1**2-L2**2))
 sats = np.asarray( ['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12',\
                        'G13','G14','G15','G16','G17','G18','G19','G20','G21','G22','G23','G24',\
                        'G25','G26','G27','G28','G29','G30','G31'] )
-########################################################                                                                          
+######################################################## 
+os.chdir('..')
+main_dir = os.getcwd()
+obs_dir  = main_dir + '/obs'
+out_dir  = main_dir + '/outputs'
+os.chdir('obs')
+
 ## PROGRAM STARTS ##
 args = parser.parse_args()
 print args 
@@ -162,8 +168,8 @@ for i in xrange(0,len(stations)):
     
     for i in sats_write:
         mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
-    
-        f = open(station+'_' + str(i) + '_test.txt', 'w')
+        
+        f = open(out_dir + '/' + station+'_' + str(i) + '_test.txt', 'w')
         f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\t'  + '\t'+ '\t' 'azi'+ '\t'  + '\t'+ '\t' 'ele' +'\n')
         try:
             for k in xrange(0,len(cum_list[i-1])):

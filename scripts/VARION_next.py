@@ -150,46 +150,46 @@ for i in myStationsProc:
     if i.process_able:
         station = i.name
         lista_obs = glob.glob(station + "*.??o")
-            lista_obs.sort()
+        lista_obs.sort()
 
-            try:
+        try:
                 interval    = mI.interval(lista_obs[0])
                 lat_g,lon_g = mI.location(lista_obs[0])
-            except UnboundLocalError:
+        except UnboundLocalError:
             ## Test debug, with function coord_geo written by me
             #lat_g,lon_g = mI.coord_geog(lista_obs[0])
                 continue
 
-            sIP = mS.subiono( i.skyFile, lat_g, lon_g )
+        sIP = mS.subiono( i.skyFile, lat_g, lon_g )
 
-################################################################################
-            lista_G = []
-            sIP_G_list = []
-            for sa in sats:     
+        ################################################################################
+        lista_G = []
+        sIP_G_list = []
+        for sa in sats:     
                 lista_G.append(mI.iono(lista_obs, sa))
                 sIP_G = mS.track(sIP, sa)
                 sIP_G_list.append(sIP_G)
 
-            #sIP_G_temp = mS.track_temp(sIP_G, tsunami - 100, tsunami + 8000, txt_file=True)
-            ################################################################################
-            ### REMOVE THE OUTLAYER
-            for i in range(0,len(lista_G)):
+        #sIP_G_temp = mS.track_temp(sIP_G, tsunami - 100, tsunami + 8000, txt_file=True)
+        ################################################################################
+        ### REMOVE THE OUTLAYER
+        for i in range(0,len(lista_G)):
                 mask = mF.no_outlayer_mask(lista_G[i][0][1] * const_tec / interval )
                 lista_G[i][0][1] = (lista_G[i][0][1][mask] * const_tec / interval ) 
                 lista_G[i][0][0] = lista_G[i][0][0][mask]
           
-            ################################################################################
-            ### POLINOMIAL INTERPOLATION OF THE DATA
-            X_list = []
-            Y_list = []
-            mask_list = []
-            p08_list  = []
-            interpo_08_list = []
+        ################################################################################
+        ### POLINOMIAL INTERPOLATION OF THE DATA
+        X_list = []
+        Y_list = []
+        mask_list = []
+        p08_list  = []
+        interpo_08_list = []
     
-            diff_08_list = []
-            cum_list     = []
+        diff_08_list = []
+        cum_list     = []
 
-            for i in xrange( 1, 32):
+        for i in xrange( 1, 32):
                 X = lista_G[i-1][0][0]
                 Y = lista_G[i-1][0][1] 
                 mask       = (X>=start) & (X<=stop)
@@ -219,11 +219,11 @@ for i in myStationsProc:
             
                     diff_08_list.append(0.0)
                     cum_list.append(0.0)       
-            ################################################################################
-            ### Create the .txt file
-            ################################################################################
+        ################################################################################
+        ### Create the .txt file
+        ################################################################################
     
-            for i in sats_write:
+        for i in sats_write:
                 mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
         
                 f = open(out_dir + '/' + station+'_' + str(i) + '_test.txt', 'w')

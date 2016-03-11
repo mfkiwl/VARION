@@ -44,8 +44,6 @@ parser.add_argument("-sat", type=int, nargs='*', default="all", dest="satNumber"
 L1 = 1.57542e9                           #HZ
 L2 = 1.22760e9                           #HZ
 A  = 40.308e16
-earth   = 3*60*60+4*60+24                ### sod of the earthquake in Canada
-tsunami = 8*60*60+30*60+24               ### sod of when the Tsunami arrived at Hawaii Islands
 
 c = 299792458.0                          # m/s
 

@@ -10,7 +10,7 @@ def subiono(sky_file, lat_GPS, long_GPS):
             - latitude of the GPS antenna
             - longitude of the GPS antenna
         output:
-            - sow
+            - sod
             - sats name
             - latitude of the sIP
             - longitude of the sIP
@@ -26,7 +26,8 @@ def subiono(sky_file, lat_GPS, long_GPS):
         
         A   = A_VAD / 180.0
         E   = np.genfromtxt(sky_file, skip_header=1, usecols=(4)) / 180.0 
-        sow = np.genfromtxt(sky_file, skip_header=1, usecols=(0))
+        sow = np.genfromtxt(sky_file, skip_header=1, usecols=(0)) # second of the week
+        sod = sow - sow[0] # second of the day
         sat = np.genfromtxt(sky_file,dtype=str, skip_header=1, usecols=(2))
         
         # Convert to semicircles (SC)
@@ -44,7 +45,7 @@ def subiono(sky_file, lat_GPS, long_GPS):
         
         long_sIP = long_GPS_sc + ( G*np.sin(A*np.pi) ) / ( np.cos(lat_GPS_sc*np.pi) )
         
-        return sow, sat, lat_sIP * 180.0 , long_sIP * 180.0, e, a
+        return sod, sat, lat_sIP * 180.0 , long_sIP * 180.0, e, a
 #####
 def track(sIP, sat_name, cut_off=False, kml_file=False, txt_file=False):
     '''
@@ -54,13 +55,13 @@ def track(sIP, sat_name, cut_off=False, kml_file=False, txt_file=False):
         - name of the satellite (e.g. 'G13')
         - kml_file (True if you want to generate a kml file)
     output:
-        - sow
+        - sod
         - names
         - lat
         - lon
     '''    
     mask = ( sIP[1] == sat_name )
-    sow   =  sIP[0][mask]
+    sod   =  sIP[0][mask]
     names =  sIP[1][mask]
     lat   =  sIP[2][mask] 
     lon   =  sIP[3][mask] 
@@ -89,7 +90,7 @@ def track(sIP, sat_name, cut_off=False, kml_file=False, txt_file=False):
             f.write( str(sow[i]) + '\t'+ '\t'+ str(lon[i]) + '\t'+ '\t'+str(lat[i]) +'\n' )
         f.close()
         
-    return sow, names, lat, lon, ele, azi
+    return sod, names, lat, lon, ele, azi
 #####
 def track_temp(sIP_sat, start, stop, kml_file):
     '''
@@ -99,13 +100,13 @@ def track_temp(sIP_sat, start, stop, kml_file):
         - stop, in sow
         - kml_file ( True or False )
     output:
-        - sow 
+        - sod 
         - names
         - lat
         - long
     '''  
     mask = ( sIP_sat[0] >= start ) & ( sIP_sat[0] <= stop )
-    sow   =  sIP_sat[0][mask]
+    sod   =  sIP_sat[0][mask]
     names =  sIP_sat[1][mask]
     lat   =  sIP_sat[2][mask]
     lon   =  sIP_sat[3][mask]
@@ -115,6 +116,6 @@ def track_temp(sIP_sat, start, stop, kml_file):
             kml.newpoint(name=names[i], coords=[(lon[i],lat[i])])   
         kml.save(names[0] + 'interval.kml')
         
-    return sow, names, lat, lon
+    return sod, names, lat, lon
 #####
     

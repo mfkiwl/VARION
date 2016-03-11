@@ -34,7 +34,7 @@ parser.add_argument("-time", nargs='*', type=str, default="all", dest="analysisT
                                       " should be performed and has to be in the format hh:min (GPS time)"\
                                       "(e.g., 18:34 19:00)")
                                       
-parser.add_argument("-sat", type=int, nargs='*', default="all", dest="satNumber", help="This argument determines the satellite(s) will be considered." \
+parser.add_argument("-sat", type=int, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
                                       "By default, this parameter is set to process all the satellites in view for each epochs."\
                                       "write just the PRN number (e.g., 1 5 23)")                      
                                        
@@ -79,8 +79,8 @@ if args.analysisTime != "all":
      stop  = int(args.analysisTime[1][:2])*60.0*60.0 + int(args.analysisTime[1][3:5])*60.0
      print start, stop
      
-if args.satNumber == "all":
-    sats_write = np.asarray( np.arange(32) )
+if args.satNumber == 0:
+    sats_write = np.asarray( np.arange(1,32) )
     print sats
 else:
     sats_write = np.asarray(args.satNumber)

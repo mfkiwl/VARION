@@ -76,7 +76,7 @@ def iono(lista_obs, sat):
                             
                             obs = re.findall('\S+\.\S+',lns[i+k])          # use regular expression to select only the float number
                         
-                            if len(obs) < 3: continue
+                            if len(obs) <= 3: continue
                             ##
                             l1.append(float(obs[l1_index])*lam1)
                             l2.append(float(obs[l2_index])*lam2)                     # In this RINEX format L1 and L2 are the first two numbers
@@ -93,7 +93,7 @@ def iono(lista_obs, sat):
                                         
                                 obs = re.findall('\S+\.\S+',lns[i+k])              # use regular expression to select only the float number
                                 
-                                if len(obs) < 3: continue
+                                if len(obs) <= 3: continue
                                 ##
                                 l1.append(  float(obs[l1_index])*lam1  )
                                 l2.append(  float(obs[l2_index])*lam2  )                        # In this RINEX format L1 and L2 are the first two numbers
@@ -108,7 +108,7 @@ def iono(lista_obs, sat):
                                 
                                 obs = re.findall('\S+\.\S+',lns[i+1+k])          # use regular expression to select only the float number
                                 
-                                if len( obs ) < 3: continue
+                                if len( obs ) <= 3: continue
                                 l1.append(  float(obs[l1_index])*lam1  )
                                 l2.append(  float(obs[l2_index])*lam2  )
                                         

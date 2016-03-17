@@ -130,7 +130,7 @@ def iono(lista_obs, sat):
         lista_sat.append([G18_sod,G18_VAD, G18_ora])
         
     return lista_sat
-################################################################################   
+################################################################################
 def interval(obs_file):
     '''
     Function that returns the inteval of the obs.
@@ -147,7 +147,8 @@ def interval(obs_file):
     for s in xrange(0, count):
         if "INTERVAL" in lns[s]:
             inter = re.findall('\S+\.\S+',lns[s])
-            interval = float(inter[0])    
+            interval = float(inter[0])  
+            break  
     return interval
 ################################################################################
 def location(obs_file):
@@ -172,6 +173,7 @@ def location(obs_file):
             coord = re.findall('\S+\.\S+',lns[s])
             lat = float(coord[0]) 
             lon = float(coord[1])   
+            break
     return lat,lon
 ###############################################################################    
 def coord_geog(staz):
@@ -193,27 +195,28 @@ def coord_geog(staz):
                 x = float(lines_1[i][1:14])
                 y = float(lines_1[i][15:29])
                 z = float(lines_1[i][29:43])
-	        # Longitudine calcolabile senza iterazioni
-	        L = np.arctan2(y,x)
-
-	        r = (x**2 + y**2)**0.5
-	        # parametri WGS84
-	        a = 6378137
-	        f = 1/298.257223563
-	        b = a*(1-f)
-	        e = (1-(b**2)/(a**2))**0.5
-
-   	        # I step
-   	        # ip h=0
-   	        F  = np.arctan2(z, r*(1-e**2))
-   	        Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
-   	        # Proviamo 50 iterazioni
-   	        for i in xrange(0,50):
-  		        h  = r/np.cos(F) - Rn
-  		        F  = np.arctan2((z*(Rn+h)),(r*Rn*(1-e**2)+h))
-  		        Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
-  		
-   	        L_grad = L/(np.pi)*180
-                F_grad = F/(np.pi)*180
                 break
+	# Longitudine calcolabile senza iterazioni
+    L = np.arctan2(y,x)
+
+    r = (x**2 + y**2)**0.5
+    # parametri WGS84
+    a = 6378137
+    f = 1/298.257223563
+    b = a*(1-f)
+    e = (1-(b**2)/(a**2))**0.5
+
+    # I step
+    # ip h=0
+    F  = np.arctan2(z, r*(1-e**2))
+    Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
+    # Proviamo 50 iterazioni
+    for i in xrange(0,50):
+        h  = r/np.cos(F) - Rn
+        F  = np.arctan2((z*(Rn+h)),(r*Rn*(1-e**2)+h))
+        Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
+
+    L_grad = L/(np.pi)*180
+        F_grad = F/(np.pi)*180
+        break
     return F_grad, L_grad 

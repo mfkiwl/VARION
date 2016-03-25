@@ -138,7 +138,7 @@ def interval(obs_file):
     f   = open(obs_file, "r")
     lns = f.readlines()
     f.close()    
-
+    flag = 0
     count = 0
     while "END OF HEADER" not in lns[count]:
         count += 1
@@ -148,7 +148,19 @@ def interval(obs_file):
         if "INTERVAL" in lns[s]:
             inter = re.findall('\S+\.\S+',lns[s])
             interval = float(inter[0])  
+            flag=1
             break  
+    if flag == 0:
+        sod = []
+        for i in xrange(count,len(lns)):
+            if "COMMENT" in lns[i]:
+                continue
+            else:
+                pass
+            ln = lns[i].split()
+            if len(ln) == 8:
+                sod.append(int(ln[3])*60*60 + int(ln[4])*60 + float(ln[5][0:3]))
+        interval + sod[1] - sod[0]
     return interval
 ################################################################################
 def location(obs_file):

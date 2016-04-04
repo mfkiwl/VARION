@@ -179,7 +179,7 @@ for i in myStationsProc:
             stec_list = []
             sod_list = []
             for i in range(0,len(lista_G)):
-                mask = mF.no_outlayer_mask(lista_G[i][0] * const_tec / interval, interval )
+                mask = mF.no_outlayer_mask(lista_G[i][0] * const_tec / interval )  ## modify the treshold to remove the outlayer
                 stec_list.append(  lista_G[i][0][mask] * const_tec / interval  ) 
                 sod_list.append(   lista_G[i][2][mask]  )
           

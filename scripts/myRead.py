@@ -5,11 +5,9 @@ import re
 def read_rinex(RINEX):
     """
     input:
-        - list of observation files
-        - name of the sat (e.g. "G18")
-    output a list with:
-        - lista_sat[i][0] the sod of the i file
-        - lista_sat[i][1] the Iono_vad of the i file
+        - RINEX file
+    output:
+        - sats_arr, hour_arr, sod_arr, l1_arr, l2_arr, c1_arr, RINEX
     """
 
     L1 = 1.57542e9    # Hz
@@ -246,7 +244,7 @@ def coord_geog(staz):
                 F  = np.arctan2((z*(Rn+h)),(r*Rn*(1-e**2)+h))
                 Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
         
-            L_grad = L/(np.pi)*180
+                L_grad = L/(np.pi)*180
                 F_grad = F/(np.pi)*180
                 break
     return F_grad, L_grad 

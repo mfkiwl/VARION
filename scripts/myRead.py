@@ -225,26 +225,26 @@ def coord_geog(staz):
                 y = float(lines_1[i][15:29])
                 z = float(lines_1[i][29:43])
             # Longitudine calcolabile senza iterazioni
-            L = np.arctan2(y,x)
+                L = np.arctan2(y,x)
 
-            r = (x**2 + y**2)**0.5
-            # parametri WGS84
-            a = 6378137
-            f = 1/298.257223563
-            b = a*(1-f)
-            e = (1-(b**2)/(a**2))**0.5
+                r = (x**2 + y**2)**0.5
+                # parametri WGS84
+                a = 6378137
+                f = 1/298.257223563
+                b = a*(1-f)
+                e = (1-(b**2)/(a**2))**0.5
 
-            # I step
-            # ip h=0
-            F  = np.arctan2(z, r*(1-e**2))
-            Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
-            # Proviamo 50 iterazioni
-            for i in xrange(0,50):
-                h  = r/np.cos(F) - Rn
-                F  = np.arctan2((z*(Rn+h)),(r*Rn*(1-e**2)+h))
+                # I step
+                # ip h=0
+                F  = np.arctan2(z, r*(1-e**2))
                 Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
-        
-                L_grad = L/(np.pi)*180
-                F_grad = F/(np.pi)*180
-                break
+                # Proviamo 50 iterazioni
+                for i in xrange(0,50):
+                    h  = r/np.cos(F) - Rn
+                    F  = np.arctan2((z*(Rn+h)),(r*Rn*(1-e**2)+h))
+                    Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
+            
+                    L_grad = L/(np.pi)*180
+                    F_grad = F/(np.pi)*180
+                    break
     return F_grad, L_grad 

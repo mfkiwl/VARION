@@ -155,6 +155,7 @@ def interval(obs_file):   ### DEBUGGG AND TEST
     f.close()    
     flag = 0
     count = 0
+
     while "END OF HEADER" not in lns[count]:
         count += 1
     count += 1
@@ -177,7 +178,10 @@ def interval(obs_file):   ### DEBUGGG AND TEST
             ln = lns[i].split()                         # split the line[i]
             if len(ln) == 8:                           # check the number of the split elements, if equal to 8 is the line with "9G27G01G07G32G...
                 sod.append(int(ln[3])*60*60 + int(ln[4])*60 + float(ln[5][0:3]))  
-        interval = sod[1] - sod[0]      
+
+        sod_array = np.asarray(sod)             
+        interval_array = sod_array[1:len(sod_array)] - sod_array[0:len(sod_array)-1]   
+        interval = np.median( interval_array )     
        
     return interval
 ################################################################################
@@ -205,10 +209,10 @@ def location(obs_file):
             lon = float(coord[1])   
     return lat,lon
 ###############################################################################    
-def coord_geog(staz):
+def coord_geog(obs_file):
     
     '''
-    input: x,y,z
+    input:  obs_file
     output: Latitude (F) and Longitude (L) WGS84
     '''
 

@@ -100,8 +100,8 @@ for sFile in stations:
 		if sFile[0:4] == station.name:
 			
 			## The station is already in the list                   #
-			## check if it has the observation and navigation file  #
-			## and if not assign them                              ##
+			## check if it has the observation and sky file         #
+			## and if not assign them                               #
 			
 			if not station.oFile:
 				station.oFile = sFile

@@ -176,12 +176,12 @@ def interval(obs_file):   ### DEBUGGG AND TEST
                 pass  
         # START stocking the obs                           
             ln = lns[i].split()                         # split the line[i]
-            if len(ln) == 8:                           # check the number of the split elements, if equal to 8 is the line with "9G27G01G07G32G...
+            if len(ln) == 8:                            # check the number of the split elements, if equal to 8 is the line with "9G27G01G07G32G...
                 sod.append(int(ln[3])*60*60 + int(ln[4])*60 + float(ln[5][0:3]))  
 
         sod_array = np.asarray(sod)             
         interval_array = sod_array[1:len(sod_array)] - sod_array[0:len(sod_array)-1]   
-        interval = np.median( interval_array )     
+        interval = np.median( interval_array )         # use the median to define the interval in order to remove the outlayers
        
     return interval
 ################################################################################

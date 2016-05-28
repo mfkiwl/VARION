@@ -60,7 +60,15 @@ def readRinexNav(fn,writeh5=None):
     strio = BytesIO(raws.encode())
     darr = np.genfromtxt(strio,delimiter=nfloat)
 
-    nav= DataFrame(np.hstack((np.asarray(sv,int)[:,None],darr)), epoch,
+    if fn[:4] == 'brdc':
+        nav= DataFrame(np.hstack((np.asarray(sv,int)[:,None],darr)), epoch,
+               ['sv','SVclockBias','SVclockDrift','SVclockDriftRate','IODE',
+                'Crs','DeltaN','M0','Cuc','Eccentricity','Cus','sqrtA','TimeEph',
+                'Cic','OMEGA','CIS','Io','Crc','omega','OMEGA DOT','IDOT',
+                'CodesL2','GPSWeek','L2Pflag','SVacc','SVhealth','TGD','IODC',
+                'Tra_bo','Fit_bo', 'bo_1', 'bo_2'])
+    else:
+        nav= DataFrame(np.hstack((np.asarray(sv,int)[:,None],darr)), epoch,
                ['sv','SVclockBias','SVclockDrift','SVclockDriftRate','IODE',
                 'Crs','DeltaN','M0','Cuc','Eccentricity','Cus','sqrtA','TimeEph',
                 'Cic','OMEGA','CIS','Io','Crc','omega','OMEGA DOT','IDOT',

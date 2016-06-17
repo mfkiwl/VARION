@@ -91,7 +91,7 @@ Xk_arr = np.asarray( Xk_list )
 Yk_arr = np.asarray( Yk_list )
 Zk_arr = np.asarray( Zk_list )
 
-with open('ahup3020.12o_VARION.sky', 'w') as f:
+with open('ahup3020.12n_VARION.sky', 'w') as f:
     f.write( 'PRN' + '\t' + 'sod' + '\t' + 'Xs' + '\t' + 'Ys' + '\t' + 'Zs'+ '\t' + 'toe' + '\n' )
     for s in xrange(1,33):
         prn_sat = s

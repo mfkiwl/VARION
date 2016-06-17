@@ -10,7 +10,7 @@ mu = 3.986005e14
 omegae = 7.2921151467e-5
 pigreco = 3.1415926535898
 
-## LETTURA FILE NAVIGAZIONALE
+## READING THE NAVIGATION RINEX 
 data = RN.readRinexNav( 'ahup3020.12n' )
 
 prn = (np.asarray(data['sv']))           # PRN number

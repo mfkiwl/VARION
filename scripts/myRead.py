@@ -153,7 +153,7 @@ def coord_xyz(obs_file):
     output: x, y, z, (WGS84) --> APPROX
     '''
 
-    filename1 = staz
+    filename1 = obs_file
     f1=open(filename1, "r")
     lines_1 = f1.readlines()
     f1.close()

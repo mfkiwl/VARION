@@ -4,6 +4,7 @@ import numpy as np
 import readRinexNav as RN
 import myRead as mR
 import myObs as mO
+import myFunc as mF
 
 
 def coord_satellite( rinex_nav, rinex_obs ):
@@ -106,6 +107,63 @@ def coord_satellite( rinex_nav, rinex_obs ):
     Zk_arr = np.asarray( Zk_list )
 
     return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr
+#####
+def track_sat(sIP, sat_name):
+    '''
+    Function that returns the geodetic coordinats of a particular satellites.
+    input:
+        - sIP list
+        - name of the satellite (e.g. 'G13')
+    output:
+        - sod
+        - names
+        - X
+        - Y
+        - Z
+        - toe
+    '''    
+    mask = ( sIP[0] == sat_name )
+    sod   =  sIP[1][mask]
+    names =  sIP[0][mask]
+    x     =  sIP[2][mask] 
+    y     =  sIP[3][mask] 
+    z     =  sIP[4][mask] 
+    toe   =  sIP[5][mask] 
+        
+    return sod, names, x, y, z, toe
+#####
+def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
+    X1, Y1, Z1 = xr, yr, zr
+
+    phi_list   = []
+    lamda_list = []
+    h_list     = []
+
+    for i in xrange(len(xs_arr)):
+        X2=xs_arr[i]
+        Y2=ys_arr[i]
+        Z2=zs_arr[i]
+
+        while True:
+            X3=(X1+X2)/2
+            Y3=(Y1+Y2)/2
+            Z3=(Z1+Z2)/2
+            phi3,lamda3,h3=mF.coord_geog(X3,Y3,Z3)
+            if abs(h3-h_iono)<1000:
+                phi_list.append(phi3)
+                lamda_list.append(lamda3)
+                h_list.append(h3)
+                break
+            if h3>h_iono:
+                X2=X3 
+                Y2=Y3
+                Z2=Z3
+            if h3<h_iono:
+                X1=X3 
+                Y1=Y3
+                Z1=Z3
+    return np.asarray(phi_list), np.asarray(lamda_list), np.asarray(h_list)        
+
 
 # with open('ahup3020.12n_VARION.sky', 'w') as f:
 #     f.write( 'PRN' + '\t' + 'sod' + '\t' + 'Xs' + '\t' + 'Ys' + '\t' + 'Zs'+ '\t' + 'toe' + '\n' )

@@ -68,6 +68,8 @@ c = 299792458.0                          # m/s
 
 const_tec = ((L1**2)*(L2**2))/(A*(L1**2-L2**2))
 
+h = 350000.0
+
 sats = np.asarray( ['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12',\
                        'G13','G14','G15','G16','G17','G18','G19','G20','G21','G22','G23','G24',\
                        'G25','G26','G27','G28','G29','G30','G31'] )
@@ -150,30 +152,32 @@ else:
 
 info_file = open(  "info.txt" , "w" )
 for i in myStationsProc:
-	if i.process_able:
-	    station = i.name
+    if i.process_able:
+        station = i.name
 	    #rinex = glob.glob(station + "*.??o")[0]   TEST
         rinex = i.oFile
         interval    = mR.interval(rinex)  
         xr,yr,zr    = mR.coord_xyz(rinex)
         lat_g,lon_g, h = mF.coord_geog(xr,yr,zr)
         
-        info_file.write( str(station)+ "\t" + str(interval) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
+        #info_file.write( str(station)+ "\t" + str(interval) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
                 
-        sIP = mS.subiono( i.GPSnFile, i.oFile)
+        sIP = tn.coord_satellite( i.GPSnFile, i.oFile)
 
 ################################################################################
         lista_G = []
         sIP_G_list = []
         data_list = []
             
-        for sa in sats:
+        for sa in xrange( len(sats) ):
                 data   = mR.read_rinex( rinex )
-                varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sa)
+                varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sats[sa])
                 data_list.append( data )  
                 lista_G.append( varion )
-                sIP_G = mS.track(sIP, sa)
-                sIP_G_list.append(sIP_G)
+                sIP_sat = tn.track_sat(sIP, sa)
+                phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h)
+
+                sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
 
         ################################################################################
         ### REMOVE THE OUTLAYER
@@ -233,7 +237,7 @@ for i in myStationsProc:
                 mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
         
                 f = open(out_dir + '/' + station+'_' + str(i) + '_test.txt', 'w')
-                f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\t'  + '\t'+ '\t' 'azi'+ '\t'  + '\t'+ '\t' 'ele' +'\n')
+                f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
                 try:
                     for k in xrange(0,len(cum_list[i-1])):
                         try:
@@ -241,8 +245,7 @@ for i in myStationsProc:
                             ## BUG FIXED  --> try with 30 s data
                             inde = (np.where(X_list[i-1][mask_list[i-1]][k] ==  sIP_G_list[i-1][0][mask]) )
                             f.write( str(sIP_G_list[i-1][0][mask][inde[0][0]]) + '\t' + '\t' + str(cum_list[i-1][k]) + '\t' + '\t' + \
-                                        str(sIP_G_list[i-1][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i-1][2][mask][inde[0][0]]) + \
-                                        '\t' + '\t' + str(sIP_G_list[i-1][5][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i-1][4][mask][inde[0][0]]) +'\n')
+                                        str(sIP_G_list[i-1][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i-1][2][mask][inde[0][0]]) +'\n')
                         except IndexError:
                             continue
                 except TypeError or IndexError:

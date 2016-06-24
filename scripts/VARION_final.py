@@ -174,7 +174,7 @@ for i in myStationsProc:
                 varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sats[sa])
                 data_list.append( data )  
                 lista_G.append( varion )
-                sIP_sat = tn.track_sat(sIP, sa)
+                sIP_sat = tn.track_sat( sIP, (sa+1) )
                 phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h)
 
                 sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )

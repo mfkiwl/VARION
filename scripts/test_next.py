@@ -10,7 +10,7 @@ import myFunc as mF
 def coord_satellite( rinex_nav, rinex_obs ):
     '''
         inputs:
-            - rinex navigation file
+            - rinex navigation file (anche brdc)
             - rinex obs file
         outputs:
             - array of the prn

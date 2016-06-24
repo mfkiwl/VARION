@@ -60,7 +60,7 @@ for s in xrange(1,33):
             else:
                 eko = ek
             if j == 49:
-                print "Iterations didn't go through in 30 steps"
+                print "Iterations didn't go through in 50 steps"
                 break
         ##
         vk = np.arctan2(   ( (( 1- ( e[ prn == prn_sat][idx] )**2 )**0.5)*np.sin(ek) ) , ( np.cos(ek)-e[ prn == prn_sat][idx] )  )

@@ -145,7 +145,29 @@ def read_rinex(RINEX):
     l2_arr = np.asarray(l2)
         
     return sats_arr, ora_arr, sod_arr, l1_arr, l2_arr, c1_arr, RINEX
-################################################################################   
+################################################################################     
+def coord_xyz(obs_file):
+    
+    '''
+    input:  obs_file
+    output: x, y, z, (WGS84) --> APPROX
+    '''
+
+    filename1 = staz
+    f1=open(filename1, "r")
+    lines_1 = f1.readlines()
+    f1.close()
+    # lettura automatica delle coordinate approssimate del ricevitore
+    for i in xrange(0,35):
+            if 'COMMENT' in lines_1[i]:
+                continue 
+            elif 'APPROX' in lines_1[i]:
+                x = float(lines_1[i][1:14])
+                y = float(lines_1[i][15:29])
+                z = float(lines_1[i][29:43])
+
+    return x, y, z
+###############################################################################  
 def interval(obs_file):   ### DEBUGGG AND TEST
     '''
     Function that returns the inteval of the obs.
@@ -208,47 +230,4 @@ def location(obs_file):
             lat = float(coord[0]) 
             lon = float(coord[1])   
     return lat,lon
-###############################################################################    
-def coord_geog(obs_file):
-    
-    '''
-    input:  obs_file
-    output: Latitude (F) and Longitude (L) WGS84
-    '''
-
-    filename1 = staz
-    f1=open(filename1, "r")
-    lines_1 = f1.readlines()
-    f1.close()
-    # lettura automatica delle coordinate approssimate del ricevitore
-    for i in xrange(0,35):
-            if 'COMMENT' in lines_1[i]:
-                continue 
-            elif 'APPROX' in lines_1[i]:
-                x = float(lines_1[i][1:14])
-                y = float(lines_1[i][15:29])
-                z = float(lines_1[i][29:43])
-            # Longitudine calcolabile senza iterazioni
-                L = np.arctan2(y,x)
-
-                r = (x**2 + y**2)**0.5
-                # parametri WGS84
-                a = 6378137
-                f = 1/298.257223563
-                b = a*(1-f)
-                e = (1-(b**2)/(a**2))**0.5
-
-                # I step
-                # ip h=0
-                F  = np.arctan2(z, r*(1-e**2))
-                Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
-                # Proviamo 50 iterazioni
-                for i in xrange(0,50):
-                    h  = r/np.cos(F) - Rn
-                    F  = np.arctan2((z*(Rn+h)),(r*Rn*(1-e**2)+h))
-                    Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
-            
-                    L_grad = L/(np.pi)*180
-                    F_grad = F/(np.pi)*180
-                    break
-    return F_grad, L_grad 
+###############################################################################

@@ -1,28 +1,5 @@
 import numpy as np
-########################################################
-## FUNCTIONS ##  
-def no_outlayer_mask(vector):
-    mask = (np.abs(vector) < 0.02)
-    return mask
-##
-def integrate(vector,dx):
-    '''
-    This function applies the Trapezoidal Rule in order to compute an integral.
-    input:
-        - array with the samples of the function
-        - dx
-    output:
-        - array with the cumulate of the input array
-    '''
-    aree = np.zeros(len(vector)-1)
-    for i in xrange(0,len(aree)):
-        aree[i] = ((vector[i]+vector[i+1])*dx)/2.0      
-    cum = np.zeros(len(aree))
-    cum[0] = aree[0]
-    for i in xrange(1,len(cum)):
-        cum[i] = cum[i-1] + (aree[i])          
-    return cum
-##   
+
 def coord_geog(x,y,z):
     '''
     input:  X,Y,Z
@@ -51,4 +28,3 @@ def coord_geog(x,y,z):
     L_grad = L/(np.pi)*180
     F_grad = F/(np.pi)*180
     return F_grad, L_grad, h
-########################################################

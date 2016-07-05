@@ -73,7 +73,7 @@ c = 299792458.0                          # m/s
 
 const_tec = ((L1**2)*(L2**2))/(A*(L1**2-L2**2))
 
-h = 350000.0
+h_iono = 350000.0
 
 sats = np.asarray( ['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12',\
 					   'G13','G14','G15','G16','G17','G18','G19','G20','G21','G22','G23','G24',\
@@ -189,7 +189,7 @@ for i in myStationsProc:
 				data_list.append( data )  
 				lista_G.append( varion )
 				sIP_sat = tn.track_sat( sIP, (sa+1) )
-				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h)
+				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
 
 				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
 

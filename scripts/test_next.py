@@ -133,13 +133,23 @@ def track_sat(sIP, sat_name):
     return sod, names, x, y, z, toe
 #####
 def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
-    X1, Y1, Z1 = xr, yr, zr
+    '''
+        Function that computes the phi,lambda and h of the IPP. It needs as input the Xr,Yr,Zr of the receiver and the
+        Xs,Ys,Zs whose are the array with the position of the satellite (it is moving).
+        input:
+            - Xr, Yr, Zr --> 1 position
+            - Xs, Ys, Zs --> arrays of position
+        output:
+            - PHIipp, LAMBDAipp, Hipp --> arrays of the same size of the one in input
+    '''    
 
     phi_list   = []
     lamda_list = []
     h_list     = []
 
     for i in xrange(len(xs_arr)):
+
+        X1, Y1, Z1 = xr, yr, zr
         X2=xs_arr[i]
         Y2=ys_arr[i]
         Z2=zs_arr[i]

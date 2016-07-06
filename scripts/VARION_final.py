@@ -177,14 +177,14 @@ for i in myStationsProc:
 		info_file.write( str(station)+ "\t" + str(interval) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
 				
 		sIP = tn.coord_satellite( rinex_nav, i.oFile)
-
+		data   = mR.read_rinex( rinex )
 ################################################################################
 		lista_G = []
 		sIP_G_list = []
 		data_list = []
 			
 		for sa in xrange( len(sats) ):
-				data   = mR.read_rinex( rinex )
+				#data   = mR.read_rinex( rinex )   SPOSTATO FUORI DAL CICLO, DOVREBBE FAR RISPARMIARE UN BEL PO'
 				varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sats[sa])
 				data_list.append( data )  
 				lista_G.append( varion )

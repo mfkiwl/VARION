@@ -2,7 +2,7 @@
 import numpy as np
 
 import readRinexNav as RN
-import myRead as mR
+import myRead_next_prova as mR
 import myObs as mO
 import myFunc as mF
 
@@ -47,7 +47,7 @@ def coord_satellite( rinex_nav, rinex_obs ):
     i_rate  = (np.asarray(data['IDOT']))     #  Rate of inclination angle (radians/sec)
     no = (mu/(a**3))**0.5
     n  = no + dn
-    ## READING THE NAVIGATION RINEX -- > in order to compute the Xs,Ys,Zs for the epochs we want
+    ## READING THE OBSERVATION RINEX -- > in order to compute the Xs,Ys,Zs at the epochs we want
     data_obs   = mR.read_rinex( rinex_obs )
 
     prn_sat_list = []
@@ -106,7 +106,7 @@ def coord_satellite( rinex_nav, rinex_obs ):
     Yk_arr = np.asarray( Yk_list )
     Zk_arr = np.asarray( Zk_list )
 
-    return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr
+    return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr, data_obs
 #####
 def track_sat(sIP, sat_name):
     '''
@@ -141,15 +141,15 @@ def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
             - Xs, Ys, Zs --> arrays of position
         output:
             - PHIipp, LAMBDAipp, Hipp --> arrays of the same size of the one in input
-    '''    
+    '''
 
     phi_list   = []
     lamda_list = []
     h_list     = []
 
     for i in xrange(len(xs_arr)):
-
         X1, Y1, Z1 = xr, yr, zr
+        
         X2=xs_arr[i]
         Y2=ys_arr[i]
         Z2=zs_arr[i]
@@ -159,7 +159,7 @@ def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
             Y3=(Y1+Y2)/2
             Z3=(Z1+Z2)/2
             phi3,lamda3,h3=mF.coord_geog(X3,Y3,Z3)
-            if abs(h3-h_iono)<1000:
+            if abs(h3-h_iono)<(250):
                 phi_list.append(phi3)
                 lamda_list.append(lamda3)
                 h_list.append(h3)
@@ -173,13 +173,3 @@ def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
                 Y1=Y3
                 Z1=Z3
     return np.asarray(phi_list), np.asarray(lamda_list), np.asarray(h_list)        
-
-
-# with open('ahup3020.12n_VARION.sky', 'w') as f:
-#     f.write( 'PRN' + '\t' + 'sod' + '\t' + 'Xs' + '\t' + 'Ys' + '\t' + 'Zs'+ '\t' + 'toe' + '\n' )
-#     for s in xrange(1,33):
-#         prn_sat = s
-#         for i in xrange(len(prn_sat_arr[ prn_sat_arr == s ])):
-#             f.write( str(prn_sat_arr[ prn_sat_arr == s ][i])+'\t'+str(sod_arr[ prn_sat_arr == s ][i])+ '\t'+\
-#                     str(Xk_arr[ prn_sat_arr == s ][i])+'\t'+str(Yk_arr[ prn_sat_arr == s ][i])+'\t'+str(Zk_arr[ prn_sat_arr == s ][i])+ \
-#                      '\t'+str(toe_arr[ prn_sat_arr == s ][i])+'\n' )

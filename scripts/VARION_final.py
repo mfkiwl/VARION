@@ -16,7 +16,7 @@ import os                           # Import os related functions
 #import sys
 import glob
 import numpy as np
-import myRead as mR
+import myRead_next_prova as mR
 import myObs as mO
 import mySub_next_test as mS
 import myFunc as mF
@@ -40,7 +40,10 @@ parser.add_argument("-sat", type=int, nargs='*', default=0, dest="satNumber", he
 									  "By default, this parameter is set to process all the satellites in view for each epochs."\
 									  "write just the PRN number (e.g., 1 5 23)")    
 
-parser.add_argument('-brdc', dest="brdcOrb",  action='store_true')                  
+parser.add_argument('-brdc', dest="brdcOrb",  action='store_true')       
+
+parser.add_argument('-height', type=int, default=350, dest="hIono",  help='This argument determines the ionospheric shell height'\
+										'By default, this value is set to 350 km')             
 									   
 ########################################################
 ## CLASSES ##
@@ -73,7 +76,7 @@ c = 299792458.0                          # m/s
 
 const_tec = ((L1**2)*(L2**2))/(A*(L1**2-L2**2))
 
-h_iono = 350000.0
+#h_iono = 350000.0       # height of the ionospheric layer
 
 sats = np.asarray( ['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12',\
 					   'G13','G14','G15','G16','G17','G18','G19','G20','G21','G22','G23','G24',\
@@ -88,6 +91,8 @@ os.chdir('obs')
 ## PROGRAM STARTS ##
 args = parser.parse_args()
 print args 
+
+h_iono = args.hIono * 1000.0      # height of the ionospheric layer
 
 if args.stazName == "all":
 	stations = glob.glob('*.??o')
@@ -176,19 +181,27 @@ for i in myStationsProc:
 		
 		info_file.write( str(station)+ "\t" + str(interval) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
 				
-		sIP = tn.coord_satellite( rinex_nav, i.oFile)
-		data   = mR.read_rinex( rinex )
+		try:
+			sIP = tn.coord_satellite( rinex_nav, i.oFile)
+			data = sIP[-1]                   # modificata tn.coord_satellite, ora ultimo elemento dovrebbe essere il data
+			#data   = mR.read_rinex( rinex )   in questo modo dovrei aver evitato un read
+		except ValueError:
+			print 'station ' + str(rinex) + ' has been skipped'
+			continue
 ################################################################################
 		lista_G = []
 		sIP_G_list = []
 		data_list = []
 			
 		for sa in xrange( len(sats) ):
-				#data   = mR.read_rinex( rinex )   SPOSTATO FUORI DAL CICLO, DOVREBBE FAR RISPARMIARE UN BEL PO'
+				
 				varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sats[sa])
 				data_list.append( data )  
 				lista_G.append( varion )
 				sIP_sat = tn.track_sat( sIP, (sa+1) )
+				# CREO FILE CON XS, YS, ZS per fare debugg
+
+				####
 				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
 
 				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
@@ -198,9 +211,9 @@ for i in myStationsProc:
 		stec_list = []
 		sod_list = []
 		for i in range(0,len(lista_G)):
-				mask = mF.no_outlayer_mask(lista_G[i][0] * const_tec / interval )  ## modify the treshold to remove the outlayer
+				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / interval )  ## modify the treshold to remove the outlayer
 				stec_list.append(  lista_G[i][0][mask] * const_tec / interval  ) 
-				sod_list.append(   lista_G[i][2][mask]  )
+				sod_list.append(  lista_G[i][2][mask]  )
 		  
 		################################################################################
 		### POLINOMIAL INTERPOLATION OF THE DATA
@@ -250,7 +263,7 @@ for i in myStationsProc:
 		for i in sats_write:
 				mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
 		
-				f = open(out_dir + '/' + station+'_' + str(i) + '_test.txt', 'w')
+				f = open(out_dir + '/' + station+'_' + str(i) + '_' + str(args.hIono) + '.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:
 					for k in xrange(0,len(cum_list[i-1])):

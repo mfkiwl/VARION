@@ -27,7 +27,10 @@ def subiono(sky_file, lat_GPS, long_GPS):
         A   = A_VAD / 180.0
         E   = np.genfromtxt(sky_file, skip_header=1, usecols=(4)) / 180.0 
         sow = np.genfromtxt(sky_file, skip_header=1, usecols=(0)) # second of the week
-        sod = sow - sow[0] # second of the day
+        # DEBUGG
+        n_days = int(sow[0]) / 86400           # in order to understand which day of the week is
+        sod = sow - 86400 * n_days             # second of the day
+        #
         sat = np.genfromtxt(sky_file,dtype=str, skip_header=1, usecols=(2))
         
         # Convert to semicircles (SC)

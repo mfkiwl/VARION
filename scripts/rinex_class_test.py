@@ -54,6 +54,36 @@ class RinexFile:
 					self.typ = np.asarray([c1_index, l1_index, l2_index])
 					break
 
+	def INTERVAL(self):   ### DEBUGGG AND TEST
+		'''
+		Function that returns the inteval of the obs.
+		'''
+		with open(self.nam, "r") as f: 
+			while True:
+				lns = f.readline()
+				if "INTERVAL" in lns:
+					inter = re.findall('\S+\.\S+',lns)
+					interval = float(inter[0]) 
+					self.int = interval
+					break
+				elif "END OF HEADER" in lns:
+					sod = []
+					for i in xrange(100):
+						lns = f.readline()
+						if "COMMENT" in lns:
+							continue 
+						else:
+							pass  
+						# START stocking the obs                           
+						ln = lns.split()                         # split the line[i]
+						if len(ln) >= 8:                         # check the number of the spli
+							sod.append(int(ln[3])*60*60 + int(ln[4])*60 + float(ln[5][0:3]))  
+					sod_array = np.asarray(sod)             
+					interval_array = sod_array[1:len(sod_array)] - sod_array[0:len(sod_array)-1]   
+					interval = np.median( interval_array )         # use the median to define the interval in order to remove the outlayers
+					self.int = interval
+					break
 
-rinex = RinexFile('gs190700.11o')
+
+rinex = RinexFile('gs190700_test.11o')
 

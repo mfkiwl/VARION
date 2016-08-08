@@ -40,7 +40,8 @@ parser.add_argument("-sat", type=int, nargs='*', default=0, dest="satNumber", he
 									  "By default, this parameter is set to process all the satellites in view for each epochs."\
 									  "write just the PRN number (e.g., 1 5 23)")    
 
-parser.add_argument('-brdc', dest="brdcOrb",  action='store_true')       
+parser.add_argument('-brdc', dest="brdcOrb",  action='store_true', help='This argument allows to use the broadcast ephemeris.' \
+										' Type -brdc in order to activate the option. ')       
 
 parser.add_argument('-height', type=int, default=350, dest="hIono",  help='This argument determines the ionospheric shell height'\
 										'By default, this value is set to 350 km')             
@@ -199,7 +200,6 @@ for i in myStationsProc:
 				data_list.append( data )  
 				lista_G.append( varion )
 				sIP_sat = tn.track_sat( sIP, (sa+1) )
-				# CREO FILE CON XS, YS, ZS per fare debugg
 
 				####
 				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)

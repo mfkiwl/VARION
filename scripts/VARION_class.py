@@ -185,8 +185,9 @@ for i in myStationsProc:
 		info_file.write( str(rinex.nam)+ "\t" + str(rinex.int) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
 				
 		try:
-			sIP = tn.coord_satellite( rinex_nav, rinex )
-			data = sIP[-1]                   # modificata tn.coord_satellite, ora ultimo elemento dovrebbe essere il data
+			data = rinex.READ_RINEX() 
+			sIP = tn.coord_satellite( rinex_nav, data )
+			                  # modificata tn.coord_satellite, ora ultimo elemento dovrebbe essere il data
 		except ValueError:
 			print 'station ' + str(rinex.nam) + ' has been skipped'
 			continue
@@ -264,7 +265,7 @@ for i in myStationsProc:
 		for i in sats_write:
 				mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
 		
-				f = open(out_dir + '/' + station+'_' + str(i) + '_' + str(args.hIono) + '.txt', 'w')
+				f = open(out_dir + '/' + str(rinex.nam[:4])+'_' + str(i) + '_' + str(args.hIono) + '.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:
 					for k in xrange(0,len(cum_list[i-1])):

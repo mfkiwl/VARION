@@ -198,6 +198,3 @@ class RinexFile:
 		l1_arr = np.asarray(l1)
 		l2_arr = np.asarray(l2)
 		return  sats_arr, ora_arr, sod_arr, l1_arr, l2_arr, c1_arr,
-
-#self = RinexFile('gs190700_test.11o')
-

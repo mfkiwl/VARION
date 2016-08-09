@@ -2,12 +2,12 @@
 import numpy as np
 
 import readRinexNav as RN
-import myRead_class as mR
+#import myRead_class as mR
 import myObs as mO
 import myFunc as mF
 
 
-def coord_satellite( rinex_nav, rinex_obs ):
+def coord_satellite( rinex_nav, data_obs ):
     '''
         inputs:
             - rinex navigation file (anche brdc)
@@ -47,8 +47,8 @@ def coord_satellite( rinex_nav, rinex_obs ):
     i_rate  = (np.asarray(data['IDOT']))     #  Rate of inclination angle (radians/sec)
     no = (mu/(a**3))**0.5
     n  = no + dn
+
     ## READING THE OBSERVATION RINEX -- > in order to compute the Xs,Ys,Zs at the epochs we want
-    data_obs   = mR.read_rinex( rinex_obs )
 
     prn_sat_list = []
     Xk_list = []

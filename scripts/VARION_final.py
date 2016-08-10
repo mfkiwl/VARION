@@ -36,9 +36,9 @@ parser.add_argument("-time", nargs='*', type=str, default="all", dest="analysisT
 									  " should be performed and has to be in the format hh:min (GPS time)"\
 									  "(e.g., 18:34 19:00)")
 									  
-parser.add_argument("-sat", type=int, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
+parser.add_argument("-sat", type=str, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
 									  "By default, this parameter is set to process all the satellites in view for each epochs."\
-									  "write just the PRN number (e.g., 1 5 23)")    
+									  "write just the PRN number (e.g., G01 G05 G23)")    
 
 parser.add_argument('-brdc', dest="brdcOrb",  action='store_true', help='This argument allows to use the broadcast ephemeris.' \
 										' Type -brdc in order to activate the option. ')       
@@ -157,12 +157,11 @@ if args.analysisTime != "all":
 	 print start, stop
 	 
 if args.satNumber == 0:
-	sats_write = np.asarray( np.arange(1,32) )
 	print sats
 else:
-	sats_write = np.asarray(args.satNumber)
-	sats_write.sort()
-	print sats_write
+	sats = np.asarray(args.satNumber)
+	sats.sort()
+	print sats
 
 ################################################################################
 ## EXECUTE VARION ##	
@@ -194,12 +193,13 @@ for i in myStationsProc:
 		sIP_G_list = []
 		data_list = []
 			
-		for sa in xrange( len(sats) ):
+		for sa in sats:
 				
-				varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sats[sa])
+				varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sa)
 				data_list.append( data )  
 				lista_G.append( varion )
-				sIP_sat = tn.track_sat( sIP, (sa+1) )
+				num_sat = int( sa[1:] )
+				sIP_sat = tn.track_sat( sIP, num_sat )
 
 				####
 				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
@@ -226,9 +226,9 @@ for i in myStationsProc:
 		diff_list = []
 		cum_list     = []
 
-		for i in xrange( 1, 32):
-				X = sod_list[i-1]
-				Y = stec_list[i-1] 
+		for i in xrange( len(sats) ):
+				X = sod_list[i]
+				Y = stec_list[i] 
 				mask       = (X>=start) & (X<=stop)
 				try:
 					p        = np.poly1d(  np.polyfit(X[mask], Y[mask], 10)  )
@@ -260,19 +260,20 @@ for i in myStationsProc:
 		### Create the .txt file
 		################################################################################
 	
-		for i in sats_write:
-				mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
+		for i in xrange(len(sats)):
+
+				mask = (sIP_G_list[i][0] >= start) & (sIP_G_list[i][0] <= stop)
 		
-				f = open(out_dir + '/' + station+'_' + str(i) + '_' + str(args.hIono) + '.txt', 'w')
+				f = open(out_dir + '/' + station+'_' + str(sats[i]) + '_' + str(args.hIono) + '_new.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:
-					for k in xrange(0,len(cum_list[i-1])):
+					for k in xrange(0,len(cum_list[i])):
 						try:
 							#### FIX DIFF OF TIME BETWEEN COORDINATES AND STEC (ONE COME FROM NAVIGATION FILE THE OTHER FROM OBS)
 							## BUG FIXED  --> try with 30 s data
-							inde = (np.where(X_list[i-1][mask_list[i-1]][k] ==  sIP_G_list[i-1][0][mask]) )
-							f.write( str(sIP_G_list[i-1][0][mask][inde[0][0]]) + '\t' + '\t' + str(cum_list[i-1][k]) + '\t' + '\t' + \
-										str(sIP_G_list[i-1][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i-1][2][mask][inde[0][0]]) +'\n')
+							inde = (np.where(X_list[i][mask_list[i]][k] ==  sIP_G_list[i][0][mask]) )
+							f.write( str(sIP_G_list[i][0][mask][inde[0][0]]) + '\t' + '\t' + str(cum_list[i][k]) + '\t' + '\t' + \
+										str(sIP_G_list[i][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i][2][mask][inde[0][0]]) +'\n')
 						except IndexError:
 							continue
 				except TypeError or IndexError:

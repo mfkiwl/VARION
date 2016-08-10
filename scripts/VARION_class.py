@@ -207,7 +207,6 @@ for i in myStationsProc:
 				lista_G.append( varion )
 				num_sat = int( sa[1:] )
 				sIP_sat = tn.track_sat( sIP, num_sat  )
-
 				####
 				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( rinex.xyz[0], rinex.xyz[1], rinex.xyz[2], sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
 
@@ -220,7 +219,7 @@ for i in myStationsProc:
 		### REMOVE THE OUTLAYER
 		stec_list = []
 		sod_list = []
-		for i in range(0,len(lista_G)):
+		for i in xrange(0,len(lista_G)):
 				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex.int )  ## modify the treshold to remove the outlayer
 				stec_list.append(  lista_G[i][0][mask] * const_tec / rinex.int  ) 
 				sod_list.append(  lista_G[i][2][mask]  )
@@ -274,16 +273,16 @@ for i in myStationsProc:
 		print("--- %s seconds ---" % (time.time() - start_time))
 		for i in xrange(len(sats)):
 				
-				mask = (sIP_G_list[i-1][0] >= start) & (sIP_G_list[i-1][0] <= stop)
+				mask = (sIP_G_list[i][0] >= start) & (sIP_G_list[i][0] <= stop)
 		
-				f = open(out_dir + '/' + str(rinex.nam[:4])+'_' + str(sats[i]) + '_' + str(args.hIono) + 'TEST.txt', 'w')
+				f = open(out_dir + '/' + str(rinex.nam[:4])+'_' + str(sats[i]) + '_' + str(args.hIono) + '_TEST.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:
 					for k in xrange(0,len(cum_list[i])):
 						try:
 							#### FIX DIFF OF TIME BETWEEN COORDINATES AND STEC (ONE COME FROM NAVIGATION FILE THE OTHER FROM OBS)
 							## BUG FIXED  --> try with 30 s data
-							inde = (np.where(X_list[i][mask_list[i-1]][k] ==  sIP_G_list[i][0][mask]) )
+							inde = (np.where(X_list[i][mask_list[i]][k] ==  sIP_G_list[i][0][mask]) )
 							f.write( str(sIP_G_list[i][0][mask][inde[0][0]]) + '\t' + '\t' + str(cum_list[i][k]) + '\t' + '\t' + \
 										str(sIP_G_list[i][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i][2][mask][inde[0][0]]) +'\n')
 						except IndexError:

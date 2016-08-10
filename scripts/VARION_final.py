@@ -72,13 +72,9 @@ class myStation:
 L1 = 1.57542e9                           #HZ
 L2 = 1.22760e9                           #HZ
 A  = 40.308e16
-
 c = 299792458.0                          # m/s
 
 const_tec = ((L1**2)*(L2**2))/(A*(L1**2-L2**2))
-
-#h_iono = 350000.0       # height of the ionospheric layer
-
 sats = np.asarray( ['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12',\
 					   'G13','G14','G15','G16','G17','G18','G19','G20','G21','G22','G23','G24',\
 					   'G25','G26','G27','G28','G29','G30','G31'] )
@@ -101,7 +97,6 @@ if args.stazName == "all":
 else:
 	statio = args.stazName
 	suffix = glob.glob(statio[0] + '*.??o')[0][4:]
-
 	stations = [ sta + suffix for sta in statio ]
 	stations.sort()
 ##########################################################   
@@ -112,7 +107,6 @@ if args.brdcOrb == True:
 
 ## COUNT HOW MANY NAVIGATION FILES ARE NOT AVAILABLE ##
 myStationsProc = []                                                     # List of stations that will be processed
-
 for sFile in stations:
 		alreadyThere = False
 		for station in myStationsProc:
@@ -128,13 +122,10 @@ for sFile in stations:
 					sGPSnFile = sFile[:-1] + 'n' 
 					if os.path.isfile(sGPSnFile):
 						station.GPSnFile = sGPSnFile
-				
-				station.VADASE_PROCESS_ABLE()
-							
+				station.VADASE_PROCESS_ABLE()	
 				alreadyThere = True
 				break
 		## The station is not in the list
-		
 		if not alreadyThere:
 			sStation = myStation()
 			sStation.name = sFile[0:4]
@@ -144,7 +135,6 @@ for sFile in stations:
 				sStation.GPSnFile = sGPSnFile
 			if args.brdcOrb == True:
 				sStation.brdcFile = brdc_file[0]
-			
 			sStation.VADASE_PROCESS_ABLE()	
 			myStationsProc.append(sStation)	
 
@@ -162,10 +152,8 @@ else:
 	sats = np.asarray(args.satNumber)
 	sats.sort()
 	print sats
-
 ################################################################################
 ## EXECUTE VARION ##	
-
 info_file = open(  "info.txt" , "w" )
 for i in myStationsProc:
 	if i.process_able:
@@ -184,48 +172,32 @@ for i in myStationsProc:
 		try:
 			sIP = tn.coord_satellite( rinex_nav, i.oFile)
 			data = sIP[-1]                   # modificata tn.coord_satellite, ora ultimo elemento dovrebbe essere il data
-			#data   = mR.read_rinex( rinex )   in questo modo dovrei aver evitato un read
 		except ValueError:
 			print 'station ' + str(rinex) + ' has been skipped'
 			continue
 ################################################################################
-		lista_G = []
-		sIP_G_list = []
-		data_list = []
-			
+		lista_G = []; sIP_G_list = []; data_list = []
 		for sa in sats:
-				
 				varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sa)
 				data_list.append( data )  
 				lista_G.append( varion )
 				num_sat = int( sa[1:] )
 				sIP_sat = tn.track_sat( sIP, num_sat )
-
 				####
 				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( xr, yr, zr, sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
-
 				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
-
 		################################################################################
 		### REMOVE THE OUTLAYER
-		stec_list = []
-		sod_list = []
+		stec_list = []; sod_list = []
 		for i in range(0,len(lista_G)):
 				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / interval )  ## modify the treshold to remove the outlayer
 				stec_list.append(  lista_G[i][0][mask] * const_tec / interval  ) 
-				sod_list.append(  lista_G[i][2][mask]  )
-		  
+				sod_list.append(  lista_G[i][2][mask]  ) 
 		################################################################################
 		### POLINOMIAL INTERPOLATION OF THE DATA
-		X_list = []
-		Y_list = []
+		X_list = []; Y_list = []
 		mask_list = []
-		p_list  = []
-		interpo_list = []
-	
-		diff_list = []
-		cum_list     = []
-
+		cum_list  = []
 		for i in xrange( len(sats) ):
 				X = sod_list[i]
 				Y = stec_list[i] 
@@ -233,37 +205,23 @@ for i in myStationsProc:
 				try:
 					p        = np.poly1d(  np.polyfit(X[mask], Y[mask], 10)  )
 					interpo = p(  X[mask]  )
-			
-					diff = Y[mask] - interpo  # residual
+					# residual
+					diff = Y[mask] - interpo  
 					cum = mF.integrate(  diff, interval  )
-			
 					X_list.append(X)
 					Y_list.append(Y)
-			
 					mask_list.append(mask)
-					p_list.append(p)
-					interpo_list.append(interpo)
-			
-					diff_list.append(diff)
 					cum_list.append(cum)
 				except (TypeError, IndexError):
 					X_list.append(0.0)
 					Y_list.append(0.0)
-			
 					mask_list.append(0.0)
-					p_list.append(0.0)
-					interpo_list.append(0.0)
-			
-					diff_list.append(0.0)
 					cum_list.append(0.0)       
 		################################################################################
 		### Create the .txt file
 		################################################################################
-	
 		for i in xrange(len(sats)):
-
 				mask = (sIP_G_list[i][0] >= start) & (sIP_G_list[i][0] <= stop)
-		
 				f = open(out_dir + '/' + station+'_' + str(sats[i]) + '_' + str(args.hIono) + '_new.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:

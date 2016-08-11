@@ -8,12 +8,9 @@
 #
 ## --------------------- ##
 ###########################
-
 ## IMPORT MODULES AND CLASSES ##
 import argparse  
-#import datetime                     # Import datetime class
-import os                           # Import os related functions 
-#import sys
+import os                           
 import glob
 import numpy as np
 import myRead_class as mR
@@ -73,11 +70,9 @@ class myStation:
 L1 = 1.57542e9                           #HZ
 L2 = 1.22760e9                           #HZ
 A  = 40.308e16
-
 c = 299792458.0                          # m/s
 
 const_tec = ((L1**2)*(L2**2))/(A*(L1**2-L2**2))
-
 sats = np.asarray( ['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12',\
 					   'G13','G14','G15','G16','G17','G18','G19','G20','G21','G22','G23','G24',\
 					   'G25','G26','G27','G28','G29','G30','G31'] )

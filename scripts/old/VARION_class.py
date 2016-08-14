@@ -4,21 +4,21 @@
 #        varion.py        #
 # 
 # creation date: 23.10.2015
-# Last modified: 14.08.2016
+# Last modified: 09.03.2016
 #
 ## --------------------- ##
 ###########################
-
 ## IMPORT MODULES AND CLASSES ##
 import argparse  
-import os                           # Import os related functions 
+import os                           
 import glob
 import numpy as np
-#
-import myObs as mO
-import myFunc as mF
-import mySatsFunc as mSF
+import myRead_class as mR
 import RinexClass as RC
+import myObs as mO
+import mySub_next_test as mS
+import myFunc as mF
+import test_next_class as tn
 
 parser = argparse.ArgumentParser(prog="varion.py", description="varion.py is a script that process RINEX obs files" \
 									  " and apply the VARION algorithm in order to obtain sTEC measuraments.\n" \
@@ -34,11 +34,12 @@ parser.add_argument("-time", nargs='*', type=str, default="all", dest="analysisT
 									  " should be performed and has to be in the format hh:min (GPS time)"\
 									  "(e.g., 18:34 19:00)")
 									  
-parser.add_argument("-sat", type=int, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
+parser.add_argument("-sat", type=str, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
 									  "By default, this parameter is set to process all the satellites in view for each epochs."\
-									  "write just the PRN number (e.g., 1 5 23)")    
+									  "write just the PRN number (e.g., G01 G05 G23)")    
 
-parser.add_argument('-brdc', dest="brdcOrb",  action='store_true')       
+parser.add_argument('-brdc', dest="brdcOrb",  action='store_true', help='This argument allows to use the broadcast ephemeris.' \
+										' Type -brdc in order to activate the option. ')       
 
 parser.add_argument('-height', type=int, default=350, dest="hIono",  help='This argument determines the ionospheric shell height'\
 										'By default, this value is set to 350 km')             
@@ -66,8 +67,8 @@ class myStation:
 ########################################################
 ## VARIABLES ##                                       
 #### Constant ####
-L1 = 1.57542e9                           # HZ
-L2 = 1.22760e9                           # HZ
+L1 = 1.57542e9                           #HZ
+L2 = 1.22760e9                           #HZ
 A  = 40.308e16
 c = 299792458.0                          # m/s
 
@@ -85,7 +86,10 @@ os.chdir('obs')
 ## PROGRAM STARTS ##
 args = parser.parse_args()
 print args 
-h_iono = args.hIono * 1000.0             # height of the ionospheric layer
+import time
+start_time = time.time()
+
+h_iono = args.hIono * 1000.0      # height of the ionospheric layer
 
 if args.stazName == "all":
 	stations = glob.glob('*.??o')
@@ -149,12 +153,11 @@ if args.analysisTime != "all":
 	 print start, stop
 	 
 if args.satNumber == 0:
-	sats_write = sats
-	print sats_write
+	print sats
 else:
-	sats_write = np.asarray(args.satNumber)
-	sats_write.sort()
-	print sats_write
+	sats = np.asarray(args.satNumber)
+	sats.sort()
+	print sats
 
 ################################################################################
 ## EXECUTE VARION ##	
@@ -162,100 +165,115 @@ else:
 info_file = open(  "info.txt" , "w" )
 for i in myStationsProc:
 	if i.process_able:
+		rinex = RC.RinexFile( i.oFile )
+		rinex.INTERVAL()
+		rinex.COORD_XYZ()
+		rinex.TYPE_OBS()
+		rinex.PROGRAM_GENERATOR()
 
 		if args.brdcOrb == True:
 			rinex_nav = brdc_file[0]
 		else:
 			rinex_nav = i.GPSnFile
-		# CREATE THE RINEX OBJECT FROM THE CLASS RinexFile()
-		rinex_obs = RC.RinexFile( i.oFile )
 
-		lat_g,lon_g, h = mF.coord_geog(  rinex_obs.xyz[0],rinex_obs.xyz[1],rinex_obs.xyz[2]  )
+		lat_g,lon_g, h = mF.coord_geog( rinex.xyz[0], rinex.xyz[1], rinex.xyz[2] )
 		
-		info_file.write( str(rinex_obs.nam)+ "\t" + str(rinex_obs.int) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
-		##
-		# read the rinex with the method built inside the class
-		import time
-		start_time = time.time()
-		rinex_obs.READ_RINEX()
-		print "RINEX file %s has been read in" % rinex_obs.nam
-		print("--- %s seconds ---" % (time.time() - start_time))
-		# select just the satellite in view
-		sats_write = mSF.sat_selection( rinex_obs, sats_write, start, stop ) 	
+		info_file.write( str(rinex.nam)+ "\t" + str(rinex.int) + "\t" + str(lat_g) + "\t" + str(lon_g) + "\n"  )
+				
 		try:
-			start_time = time.time()
-			sIP = mSF.coord_satellite( rinex_nav, rinex_obs, sats_write)
-			print "Coord satellites has been computed in"
+			data = rinex.READ_RINEX() 
+			print "RINEX file %s has been read" % rinex.nam
+			print("--- %s seconds ---" % (time.time() - start_time))
+			sIP = tn.coord_satellite( rinex_nav, data )
+			print "Coord satellites has been computed"
 			print("--- %s seconds ---" % (time.time() - start_time))
 		except ValueError:
-			print 'station ' + str(rinex_obs.nam) + ' has been skipped'
+			print 'station ' + str(rinex.nam) + ' has been skipped'
 			continue
 ################################################################################
 		lista_G = []
 		sIP_G_list = []
 		data_list = []
-		start_time = time.time()	
-		for sa in sats_write:
-				varion = mO.obs_sat( rinex_obs.data[0], rinex_obs.data[1], rinex_obs.data[2], rinex_obs.data[3], rinex_obs.data[4], sa )
-				data_list.append( rinex_obs.data )  
+			
+		for sa in sats:
+				
+				varion = mO.obs_sat( data[0], data[1], data[2], data[3], data[4], sa)
+				data_list.append( data )  
 				lista_G.append( varion )
-				sIP_sat = mSF.track_sat( sIP, sa, start, stop  )
+				num_sat = int( sa[1:] )
+				sIP_sat = tn.track_sat( sIP, num_sat  )
 				####
-				phi_ipp, lambda_ipp, h_ipp = mSF.coord_ipps( rinex_obs.xyz[0],rinex_obs.xyz[1],rinex_obs.xyz[2], sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
+				phi_ipp, lambda_ipp, h_ipp = tn.coord_ipps( rinex.xyz[0], rinex.xyz[1], rinex.xyz[2], sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
+
 				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
+
 		print "VARION algorithm has been computed for the satellites selected"
 		print "IPP location has been computed for the satellites selected"
 		print("--- %s seconds ---" % (time.time() - start_time))
-
 		################################################################################
 		### REMOVE THE OUTLAYER
 		stec_list = []
 		sod_list = []
-		for i in xrange( len(sats_write) ):
-				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex_obs.int )  ## modify the treshold to remove the outlayer
-				stec_list.append(  lista_G[i][0][mask] * const_tec / rinex_obs.int  ) 
+		for i in xrange(0,len(lista_G)):
+				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex.int )  ## modify the treshold to remove the outlayer
+				stec_list.append(  lista_G[i][0][mask] * const_tec / rinex.int  ) 
 				sod_list.append(  lista_G[i][2][mask]  )
 		  
 		################################################################################
 		### POLINOMIAL INTERPOLATION OF THE DATA
-		X_list = []; Y_list = []
+		X_list = []
+		Y_list = []
 		mask_list = []
+		p_list  = []
+		interpo_list = []
+	
 		diff_list = []
-		cum_list  = []
+		cum_list     = []
 
-		for i in xrange( len(sats_write) ):
+		for i in xrange( len(sats) ):
 				X = sod_list[i]
 				Y = stec_list[i] 
 				mask       = (X>=start) & (X<=stop)
 				try:
 					p        = np.poly1d(  np.polyfit(X[mask], Y[mask], 10)  )
 					interpo = p(  X[mask]  )
-					# residual
-					diff = Y[mask] - interpo  
-					# integrate
-					cum = mF.integrate(  diff, rinex_obs.int  )
-					# append
+			
+					diff = Y[mask] - interpo  # residual
+					cum = mF.integrate(  diff, rinex.int  )
+			
 					X_list.append(X)
 					Y_list.append(Y)
+			
 					mask_list.append(mask)
+					p_list.append(p)
+					interpo_list.append(interpo)
+			
 					diff_list.append(diff)
 					cum_list.append(cum)
 				except (TypeError, IndexError):
 					X_list.append(0.0)
 					Y_list.append(0.0)
+			
 					mask_list.append(0.0)
+					p_list.append(0.0)
+					interpo_list.append(0.0)
+			
 					diff_list.append(0.0)
-					cum_list.append(0.0)       
+					cum_list.append(0.0)    
+				print "Residuals after polyhomial interpolation has been computed for sat %s" % i
+				print("--- %s seconds ---" % (time.time() - start_time))  
 		################################################################################
 		### Create the .txt file
 		################################################################################
-		for i in xrange( len(sats_write) ):
+		print("--- %s seconds ---" % (time.time() - start_time))
+		for i in xrange(len(sats)):
+				
 				mask = (sIP_G_list[i][0] >= start) & (sIP_G_list[i][0] <= stop)
 		
-				f = open(out_dir + '/' + str( rinex_obs.nam ) +'_' + str(sats_write[i]) + '_' + str(args.hIono) + '.txt', 'w')
+				f = open(out_dir + '/' + str(rinex.nam[:4])+'_' + str(sats[i]) + '_' + str(args.hIono) + '_TEST.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:
-					for k in xrange( len(cum_list[i]) ):
+					for k in xrange(0,len(cum_list[i])):
 						try:
 							#### FIX DIFF OF TIME BETWEEN COORDINATES AND STEC (ONE COME FROM NAVIGATION FILE THE OTHER FROM OBS)
 							## BUG FIXED  --> try with 30 s data

@@ -20,7 +20,7 @@ import myFunc as mF
 import mySatsFunc as mSF
 import RinexClass as RC
 
-parser = argparse.ArgumentParser(prog="varion.py", description="varion.py is a script that process RINEX obs files" \
+parser = argparse.ArgumentParser(prog="VARION.py", description="VARION.py is a script that process RINEX obs files" \
 									  " and apply the VARION algorithm in order to obtain sTEC measuraments.\n" \
 									  " author: Giorgio Savastano - giorgio.savastano@uniroma1.it")
 									  

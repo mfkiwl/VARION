@@ -170,7 +170,7 @@ def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
             Y3=(Y1+Y2)/2
             Z3=(Z1+Z2)/2
             phi3,lamda3,h3=mF.coord_geog(X3,Y3,Z3)
-            if abs(h3-h_iono)<(250):
+            if abs(h3-h_iono)<(25):
                 phi_list.append(phi3)
                 lamda_list.append(lamda3)
                 h_list.append(h3)

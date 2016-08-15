@@ -203,8 +203,8 @@ for i in myStationsProc:
 				####
 				phi_ipp, lambda_ipp, h_ipp = mSF.coord_ipps( rinex_obs.xyz[0],rinex_obs.xyz[1],rinex_obs.xyz[2], sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
 				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
-		print "VARION algorithm has been computed for the satellites selected"
-		print "IPP location has been computed for the satellites selected"
+		print "VARION algorithm has been computed and"
+		print "IPP location has been computed for the satellites selected in"
 		print("--- %s seconds ---" % (time.time() - start_time))
 
 		################################################################################
@@ -222,7 +222,8 @@ for i in myStationsProc:
 		mask_list = []
 		diff_list = []
 		cum_list  = []
-
+		import warnings
+		warnings.simplefilter('ignore', np.RankWarning)
 		for i in xrange( len(sats_write) ):
 				X = sod_list[i]
 				Y = stec_list[i] 

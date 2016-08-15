@@ -34,9 +34,9 @@ parser.add_argument("-time", nargs='*', type=str, default="all", dest="analysisT
 									  " should be performed and has to be in the format hh:min (GPS time)"\
 									  "(e.g., 18:34 19:00)")
 									  
-parser.add_argument("-sat", type=int, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
+parser.add_argument("-sat", type=str, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
 									  "By default, this parameter is set to process all the satellites in view for each epochs."\
-									  "write just the PRN number (e.g., 1 5 23)")    
+									  "write just the PRN number (e.g., G01 G05 G23)")    
 
 parser.add_argument('-brdc', dest="brdcOrb",  action='store_true')       
 

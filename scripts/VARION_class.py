@@ -181,10 +181,10 @@ for i in myStationsProc:
 		print "RINEX file %s has been read in" % rinex_obs.nam
 		print("--- %s seconds ---" % (time.time() - start_time))
 		# select just the satellite in view
-		sats_write = mSF.sat_selection( rinex_obs, sats_write, start, stop ) 	
+		sats_write_1 = mSF.sat_selection( rinex_obs, sats_write, start, stop ) 	
 		try:
 			start_time = time.time()
-			sIP = mSF.coord_satellite( rinex_nav, rinex_obs, sats_write)
+			sIP = mSF.coord_satellite( rinex_nav, rinex_obs, sats_write_1)
 			print "Coord satellites has been computed in"
 			print("--- %s seconds ---" % (time.time() - start_time))
 		except ValueError:
@@ -195,7 +195,7 @@ for i in myStationsProc:
 		sIP_G_list = []
 		data_list = []
 		start_time = time.time()	
-		for sa in sats_write:
+		for sa in sats_write_1:
 				varion = mO.obs_sat( rinex_obs.data[0], rinex_obs.data[1], rinex_obs.data[2], rinex_obs.data[3], rinex_obs.data[4], sa )
 				data_list.append( rinex_obs.data )  
 				lista_G.append( varion )
@@ -211,7 +211,7 @@ for i in myStationsProc:
 		### REMOVE THE OUTLAYER
 		stec_list = []
 		sod_list = []
-		for i in xrange( len(sats_write) ):
+		for i in xrange( len(sats_write_1) ):
 				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex_obs.int )  ## modify the treshold to remove the outlayer
 				stec_list.append(  lista_G[i][0][mask] * const_tec / rinex_obs.int  ) 
 				sod_list.append(  lista_G[i][2][mask]  )
@@ -224,7 +224,7 @@ for i in myStationsProc:
 		cum_list  = []
 		import warnings
 		warnings.simplefilter('ignore', np.RankWarning)
-		for i in xrange( len(sats_write) ):
+		for i in xrange( len(sats_write_1) ):
 				X = sod_list[i]
 				Y = stec_list[i] 
 				mask       = (X>=start) & (X<=stop)
@@ -250,10 +250,10 @@ for i in myStationsProc:
 		################################################################################
 		### Create the .txt file
 		################################################################################
-		for i in xrange( len(sats_write) ):
+		for i in xrange( len(sats_write_1) ):
 				mask = (sIP_G_list[i][0] >= start) & (sIP_G_list[i][0] <= stop)
 		
-				f = open(out_dir + '/' + str( rinex_obs.nam ) +'_' + str(sats_write[i]) + '_' + str(args.hIono) + '.txt', 'w')
+				f = open(out_dir + '/' + str( rinex_obs.nam ) +'_' + str(sats_write_1[i]) + '_' + str(args.hIono) + '.txt', 'w')
 				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
 				try:
 					for k in xrange( len(cum_list[i]) ):

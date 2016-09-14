@@ -22,6 +22,8 @@
 # along with VARION. If not, see <http://www.gnu.org/licenses/>.
 #
 # -------------------------------------------------------------------------
+import numpy as np
+##
 class RinexFile:
 	"""Class for RINEX attributes. The class contins the following methods:
 			- PROGRAM_GENERATOR()  -->  to set the self.prg

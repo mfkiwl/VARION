@@ -22,6 +22,7 @@
 # along with VARION. If not, see <http://www.gnu.org/licenses/>.
 #
 # -------------------------------------------------------------------------
+import numpy as np
 ##  
 def no_outlayer_mask(vector):
     mask = (np.abs(vector) < 0.02)

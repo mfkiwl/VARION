@@ -36,7 +36,6 @@ import argparse
 import os                           # Import os related functions 
 import glob
 import numpy as np
-from pandas import DataFrame
 #
 import myObs as mO
 import myFunc as mF

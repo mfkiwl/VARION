@@ -7,6 +7,7 @@
 # G.Savastano, A.Komjathy, O.Yang, O. Verkhoglyadova, A.Mazzoni, M.Crespi
 # and Y.Wei "Real-Time Detection of Tsunami Ionospheric Disturbances with
 # a Stand-Alone GNSS Receiver: A Preliminary Feasibility Demonstration",
+# ARXIV.
 # 
 # -------------------------------------------------------------------------
 #

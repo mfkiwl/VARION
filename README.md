@@ -10,7 +10,7 @@ Then move with the terminal into the "/script" dir and execute the VARION script
         $ ./VARION_next.py -h      --->     to run the help
 		$ ./VARION_next.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 G08 G10
         $ ./VARION_next.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 -brdc    ---> to use brdc file
-        $ ./VARION_next.py -time 08:00 09:30 -brdc -height
+        $ ./VARION_next.py -time 08:00 09:30 -brdc -height 450
 
 ##OS
 		$ python VARION_next.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 G08 G10

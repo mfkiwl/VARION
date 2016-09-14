@@ -27,7 +27,6 @@ from __future__ import division,absolute_import
 from os.path import expanduser,splitext
 import numpy as np
 from datetime import datetime
-from pandas import DataFrame
 from io import BytesIO
 
 def readRinexNav(fn,writeh5=None):

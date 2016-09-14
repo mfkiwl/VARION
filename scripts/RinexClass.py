@@ -1,5 +1,27 @@
-import numpy as np
-##
+# \author Giorgio Savastano, 2015. giorgio.savastano(at)uniroma1.it
+#
+# -------------------------------------------------------------------------
+#
+# Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
+#
+# VARION is a opean source software for GNSS processing
+#
+# This file is part of VARION.
+#
+# VARION is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# VARION is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with VARION. If not, see <http://www.gnu.org/licenses/>.
+#
+# -------------------------------------------------------------------------
 class RinexFile:
 	"""Class for RINEX attributes. The class contins the following methods:
 			- PROGRAM_GENERATOR()  -->  to set the self.prg
@@ -106,6 +128,8 @@ class RinexFile:
 		num_lin = 1
 		if self.prg == "SPIDER":
 				num_lin = 2
+		elif self.prg == "cnvtToRINEX":
+				num_lin = 2			
 		#
 		f   = open(self.nam, "r")
 		lns = f.readlines()

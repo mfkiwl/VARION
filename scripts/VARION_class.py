@@ -1,14 +1,35 @@
 #!/usr/bin/python
-###########################
-## --------------------- ##
-#        varion.py        #
-# 
-# creation date: 23.10.2015
-# Last modified: 14.08.2016
+# \file VARION_class.py
+# \brief This script implements the VARION algorithm for real-time 
+#  detection of sTEC variations using GNSS observations.
+# \author Giorgio Savastano, 23.10.2015. giorgio.savastano(at)uniroma1.it
 #
-## --------------------- ##
-###########################
-
+# G.Savastano, A.Komjathy, O.Yang, O. Verkhoglyadova, A.Mazzoni, M.Crespi
+# and Y.Wei "Real-Time Detection of Tsunami Ionospheric Disturbances with
+# a Stand-Alone GNSS Receiver: A Preliminary Feasibility Demonstration",
+# 
+# -------------------------------------------------------------------------
+#
+# Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
+#
+# VARION is a opean source software for GNSS processing
+#
+# This file is part of VARION.
+#
+# VARION is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# VARION is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with VARION. If not, see <http://www.gnu.org/licenses/>.
+#
+#-------------------------------------------------------------------------
 ## IMPORT MODULES AND CLASSES ##
 import argparse  
 import os                           # Import os related functions 

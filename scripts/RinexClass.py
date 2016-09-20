@@ -25,8 +25,15 @@
 import numpy as np
 ##
 class RinexFile:
-	"""Class for RINEX attributes. The class contins the following methods:
-			- PROGRAM_GENERATOR()  -->  to set the self.prg
+	"""
+	Class for RINEX attributes. 
+	The class contins the following methods automatically call with the constructor:
+			- PROGRAM_GENERATOR()  -->  set the self.prg with the Program Generator name 
+			- COORD_XYX()          -->  set the self.xyz with the APPROX coord of the receiver
+			- TYPE_OBS()           -->  set the self.typ with the order of the obs (C1, L1, L2 ...)
+			- INTERVAL()           -->  set the self.int with the time interval of the obs
+	the class also contains the following method:
+			- READ_RINEX()         -->  set the self.data with al the obs in the RINEX file
 	"""
 	# Init
 	def __init__(self, rinex):

@@ -2,12 +2,23 @@
 # \file VARION_class.py
 # \brief This script implements the VARION algorithm for real-time 
 #  detection of sTEC variations using GNSS observations.
-# \author Giorgio Savastano, 23.10.2015. giorgio.savastano(at)uniroma1.it
+# \author Giorgio Savastano, 23.10.2015. giorgio.savastano[AT]uniroma1.it
 #
-# G.Savastano, A.Komjathy, O.Yang, O. Verkhoglyadova, A.Mazzoni, M.Crespi
-# and Y.Wei "Real-Time Detection of Tsunami Ionospheric Disturbances with
-# a Stand-Alone GNSS Receiver: A Preliminary Feasibility Demonstration",
-# ARXIV.
+# Notice: Please acknowledge the use of the above software in any publications:
+#    ``VARION software was provided by G. Savastano et al.,
+#      and is available at URL: http://paos.colorado.edu/research/wavelets/''.
+#
+# Reference: G. Savastano, A. Komjathy, O. Yang, O. Verkhoglyadova, A. Mazzoni, M. Crespi
+# 			 and Y. Wei "Real-Time Detection of Tsunami Ionospheric Disturbances with
+# 			 a Stand-Alone GNSS Receiver: A Preliminary Feasibility Demonstration",
+# 			 ARXIV.
+#
+# Please send a copy of such publications to either G. Savastano or A. Komjathy:
+#  Dr. Giorgio Savastano                      		 Dr. Attila Komjathy
+#  Building and Environmental Engineering,    		 Ionospheric and Atmospheric Remote Sensing Group, 
+#  University of Rome "La Sapienza"           		 Jet Propulsion Laboratory, California Institute of Technology,
+#  Rome, Italy.                               		 Pasadena, California, USA.
+#  E-mail: giorgio.savastano[AT]uniroma1.com         E-mail: attila.komjathy[AT]jpl.nasa.gov 
 # 
 # -------------------------------------------------------------------------
 #
@@ -33,7 +44,7 @@
 #-------------------------------------------------------------------------
 ## IMPORT MODULES AND CLASSES ##
 import argparse  
-import os                           # Import os related functions 
+import os                           
 import glob
 import numpy as np
 #

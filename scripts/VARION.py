@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# \file VARION_class.py
+# \file VARION.py
 # \brief This script implements the VARION algorithm for real-time 
 #  detection of sTEC variations using GNSS observations.
 # \author Giorgio Savastano, 23.10.2015. giorgio.savastano[AT]uniroma1.it

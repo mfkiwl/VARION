@@ -14,7 +14,7 @@
 # 			 ARXIV.
 #
 # Please send a copy of such publications to either G. Savastano or A. Komjathy:
-#  Dr. Giorgio Savastano                      		 Dr. Attila Komjathy
+#  Giorgio Savastano                      		     Dr. Attila Komjathy
 #  Building and Environmental Engineering,    		 Ionospheric and Atmospheric Remote Sensing Group, 
 #  University of Rome "La Sapienza"           		 Jet Propulsion Laboratory, California Institute of Technology,
 #  Rome, Italy.                               		 Pasadena, California, USA.

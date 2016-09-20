@@ -1,9 +1,28 @@
-"""
-Reads RINEX 2.1 NAV files
-by Michael Hirsch
-https://scivision.co
-MIT License
-"""
+# \file readRinexNav.py
+# \author Giorgio Savastano, 2015. giorgio.savastano(at)uniroma1.it
+#
+# -------------------------------------------------------------------------
+#
+# Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
+#
+# VARION is a opean source software for GNSS processing
+#
+# This file is part of VARION.
+#
+# VARION is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# VARION is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with VARION. If not, see <http://www.gnu.org/licenses/>.
+#
+# -------------------------------------------------------------------------
 from __future__ import division,absolute_import
 from os.path import expanduser,splitext
 import numpy as np
@@ -12,12 +31,7 @@ from pandas import DataFrame
 from io import BytesIO
 
 def readRinexNav(fn,writeh5=None):
-    """
-    Michael Hirsch
-    It may actually be faster to read the entire file via f.read() and then .split()
-    and asarray().reshape() to the final result, but I did it frame by frame.
-    http://gage14.upc.es/gLAB/HTML/GPS_Navigation_Rinex_v2.11.html
-    """
+
     stem,ext = splitext(expanduser(fn))
     startcol = 3 #column where numerical data starts
     nfloat=19 #number of text elements per float data number
@@ -66,7 +80,7 @@ def readRinexNav(fn,writeh5=None):
                 'Crs','DeltaN','M0','Cuc','Eccentricity','Cus','sqrtA','TimeEph',
                 'Cic','OMEGA','CIS','Io','Crc','omega','OMEGA DOT','IDOT',
                 'CodesL2','GPSWeek','L2Pflag','SVacc','SVhealth','TGD','IODC',
-                'Tra_bo','Fit_bo', 'bo_1', 'bo_2'])
+                'TransTime','FitIntvl', 'spare_1', 'spare_2'])
     else:
         nav= DataFrame(np.hstack((np.asarray(sv,int)[:,None],darr)), epoch,
                ['sv','SVclockBias','SVclockDrift','SVclockDriftRate','IODE',

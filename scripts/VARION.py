@@ -8,9 +8,9 @@
 #    ``VARION software was provided by G. Savastano et al.,
 #      and is available at URL: http://''.
 #
-# Reference: G. Savastano, A. Komjathy, O. Yang, O. Verkhoglyadova, A. Mazzoni, M. Crespi
-# 			 and Y. Wei "Real-Time Detection of Tsunami Ionospheric Disturbances with
-# 			 a Stand-Alone GNSS Receiver: A Preliminary Feasibility Demonstration",
+# Reference: G. Savastano, A. Komjathy, O. Verkhoglyadova, A. Mazzoni, M. Crespi and Y. Wei 
+# 			 "Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone
+# 			 GNSS Receiver: A Preliminary Feasibility Demonstration",
 # 			 ARXIV.
 #
 # Please send a copy of such publications to either G. Savastano or A. Komjathy:
@@ -58,7 +58,7 @@ parser = argparse.ArgumentParser(prog="VARION.py", description="VARION.py is a s
 									  " author: Giorgio Savastano - giorgio.savastano@uniroma1.it")
 									  
 parser.add_argument("-staz", type=str, nargs='*', default="all", dest="stazName", help="This argument determines the station(s) will be processed." \
-									  " By default, this parameter is set to process all the RINEX observation files in the working folder. ")
+									  " By default, this parameter is set to process all the RINEX observation files in the working folder (/obs). ")
 						   
 parser.add_argument("-time", nargs='*', type=str, default="all", dest="analysisTime", 
 										help="If no argument is given, the analysis is executed for " \
@@ -69,9 +69,9 @@ parser.add_argument("-time", nargs='*', type=str, default="all", dest="analysisT
 									  
 parser.add_argument("-sat", type=str, nargs='*', default=0, dest="satNumber", help="This argument determines the satellite(s) will be considered." \
 									  "By default, this parameter is set to process all the satellites in view for each epochs."\
-									  "write just the PRN number (e.g., G01 G05 G23)")    
+									  "(e.g., G01 G05 G23)")    
 
-parser.add_argument('-brdc', dest="brdcOrb",  action='store_true')       
+parser.add_argument('-brdc', dest="brdcOrb",  action='store_true', help="This argument set the processing with the brdc file")       
 
 parser.add_argument('-height', type=int, default=350, dest="hIono",  help='This argument determines the ionospheric shell height'\
 										'By default, this value is set to 350 km')             

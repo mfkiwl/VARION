@@ -27,7 +27,7 @@ import numpy as np
 class RinexFile:
 	"""
 	Class for RINEX attributes. 
-	The class contins the following methods automatically call with the constructor:
+	The class contins the following methods automatically called by the constructor:
 			- PROGRAM_GENERATOR()  -->  set the self.prg with the Program Generator name 
 			- COORD_XYX()          -->  set the self.xyz with the APPROX coord of the receiver
 			- TYPE_OBS()           -->  set the self.typ with the order of the obs (C1, L1, L2 ...)

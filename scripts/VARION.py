@@ -6,7 +6,7 @@
 #
 # Notice: Please acknowledge the use of the above software in any publications:
 #    ``VARION software was provided by G. Savastano et al.,
-#      and is available at URL: http://paos.colorado.edu/research/wavelets/''.
+#      and is available at URL: http://''.
 #
 # Reference: G. Savastano, A. Komjathy, O. Yang, O. Verkhoglyadova, A. Mazzoni, M. Crespi
 # 			 and Y. Wei "Real-Time Detection of Tsunami Ionospheric Disturbances with
@@ -14,11 +14,11 @@
 # 			 ARXIV.
 #
 # Please send a copy of such publications to either G. Savastano or A. Komjathy:
-#  Giorgio Savastano                      		     Dr. Attila Komjathy
-#  Building and Environmental Engineering,    		 Ionospheric and Atmospheric Remote Sensing Group, 
-#  University of Rome "La Sapienza"           		 Jet Propulsion Laboratory, California Institute of Technology,
-#  Rome, Italy.                               		 Pasadena, California, USA.
-#  E-mail: giorgio.savastano[AT]uniroma1.com         E-mail: attila.komjathy[AT]jpl.nasa.gov 
+#  Giorgio Savastano                      		     	Dr. Attila Komjathy
+#  Civil, Building and Environmental Engineering,    	Ionospheric and Atmospheric Remote Sensing Group, 
+#  University of Rome "La Sapienza"           		 	Jet Propulsion Laboratory, California Institute of Technology,
+#  Rome, Italy.                               		 	Pasadena, California, USA.
+#  E-mail: giorgio.savastano[AT]uniroma1.com         	E-mail: attila.komjathy[AT]jpl.nasa.gov 
 # 
 # -------------------------------------------------------------------------
 #

@@ -24,3 +24,7 @@ Then move with the terminal into the "/script" dir and execute the VARION script
 - Python 2.7+ (other versions might work but have not been tested)
 - Numpy
 - Pandas
+
+### Contacts ###
+
+giorgio.savastano@uniroma1.it

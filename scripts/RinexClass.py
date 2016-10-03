@@ -83,7 +83,7 @@ class RinexFile:
 						l1_index = index[l1_mas][0]
 						l2_index = index[l2_mas][0]
 						break
-			return np.asarray([c1_index, l1_index, l2_index])
+			return np.asarray([c1_index, l1_index, l2_index]), lns[5]
 		def INTERVAL(file_nam):   ### DEBUGGG AND TEST
 			'''
 			Function that returns the inteval of the obs
@@ -118,7 +118,7 @@ class RinexFile:
 		self.prg = PROGRAM_GENERATOR( self.nam )
 		self.xyz = COORD_XYZ( self.nam )
 		self.int = INTERVAL( self.nam )
-		self.typ = TYPE_OBS( self.nam )
+		self.typ, self.obs = TYPE_OBS( self.nam )
 		self.data = ""
 	#######################################################################
 	def READ_RINEX(self):
@@ -135,10 +135,8 @@ class RinexFile:
 		lam2=c/L2         # m
 		##
 		num_lin = 1
-		if self.prg == "SPIDER":
-				num_lin = 2
-		elif self.prg == "cnvtToRINEX":
-				num_lin = 2			
+		if int(self.obs)<=5:
+				num_lin = 2	
 		#
 		f   = open(self.nam, "r")
 		lns = f.readlines()
@@ -188,7 +186,7 @@ class RinexFile:
 									lin_epoc = (n_sats-s_sats)*(2/num_lin)    
 									for k in xrange(1, lin_epoc+1):    
 											# salto le righe pari
-											if self.prg != 'SPIDER':
+											if num_lin != 2:
 												if k % 2 == 0: continue   
 											# use regular expression to select only the float number
 											obs = re.findall('\S+\.\S+', lns[i+k])
@@ -212,7 +210,7 @@ class RinexFile:
 									ln_2 = lns[i+1].split()                     # splitto anche la riga dopo
 									lin_epoc = (n_sats-s_sats)*(2/num_lin)
 									for k in xrange(1, lin_epoc+1):                      # if n_sats=12, than k = [1,3,5,...,23]
-											if self.prg != 'SPIDER':
+											if num_lin != 2:
 												if k % 2 == 0: continue 
 											obs = re.findall('\S+\.\S+',lns[i+1+k])
 											if len( obs ) <= 3: continue

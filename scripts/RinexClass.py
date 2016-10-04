@@ -83,7 +83,7 @@ class RinexFile:
 						l1_index = index[l1_mas][0]
 						l2_index = index[l2_mas][0]
 						break
-			return np.asarray([c1_index, l1_index, l2_index]), lns[5]
+			return np.asarray([c1_index, l1_index, l2_index]), lns[4:6]
 		def INTERVAL(file_nam):   ### DEBUGGG AND TEST
 			'''
 			Function that returns the inteval of the obs

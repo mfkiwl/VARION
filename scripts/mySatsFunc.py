@@ -46,7 +46,7 @@ def sat_selection( rinex_obj, sats_list, start, stop ):
 def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     '''
         inputs:
-            - rinex navigation file (anche brdc)
+            - rinex navigation file (also brdc)
             - rinex obs file
         outputs:
             - array of the prn

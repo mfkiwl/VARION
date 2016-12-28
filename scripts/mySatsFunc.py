@@ -164,6 +164,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
 
     prn_sat_list = []
     Xk_list = []; Yk_list = []; Zk_list = []
+    Az_list = []; El_list = []
     sod_list = []
     toe_list = []
     for s in sats_write:
@@ -226,9 +227,15 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
             #Xk   =  Xk * np.cos(alpha) + Yk * np.sin(alpha)
             #Yk   = -Xk * np.sin(alpha) + Yk * np.cos(alpha)
 
+            Az, El = calculateAzimuthElevation(Xk, Yk, Zk, rinex_obs)
+
             Xk_list.append( Xk )
             Yk_list.append( Yk )
             Zk_list.append( Zk )
+
+            Az_list.append( Az )
+            El_list.append( El )
+
             prn_sat_list.append( s )
             sod_list.append( sod[i])
             toe_list.append( te[ prn==prn_sat ][ idx] )
@@ -239,8 +246,10 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     Xk_arr = np.asarray( Xk_list )
     Yk_arr = np.asarray( Yk_list )
     Zk_arr = np.asarray( Zk_list )
+    Az_arr = np.asarray( Az_list )
+    El_arr = np.asarray( El_list )
 
-    return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr
+    return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr, Az_arr, El_arr
 #####
 def track_sat(sIP, sat_name, start, stop ):
     '''

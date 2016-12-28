@@ -56,10 +56,21 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
             - array of the Z of the satellites
             - array of the time of Time of Ephemeris (seconds into GPS week)
     '''
-    ##CONSTANTS
+    ##### CONSTANTS
+
+    # WGS 84 value of earth's univ. grav. par.
     mu = 3.986005e14
+    # WGS 84 value of earth's rotation rate
     omegae = 7.2921151467e-5
+
     pigreco = 3.1415926535898
+    speedOfLight = 299792458.0
+
+    # relativistic correction term constant
+    F = -4.442807633E-10
+
+    # WGS-84 earth rotation rate
+    we = 7.292115e-5
 
     ## READING THE NAVIGATION RINEX 
     data = RN.readRinexNav( rinex_nav )
@@ -96,14 +107,18 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
 
         for i in xrange( len(sod) ):
             ### DEBUG
+            # Time of flight
             tof = data_obs[-1][1:][i] / speedOfLight
+
             ### correction due to the earth rotation
-            ## alpha = tof * we
+            # alpha = tof * we
+            
             trasmitTime = (sod[i] + rinex_obs.gps_sow_ref) - tof
             tk_arr = ( trasmitTime - te[ prn==prn_sat ] )                              # tk = t - te
             val, idx = min((val, idx) for (idx, val) in enumerate( np.abs(tk_arr) ))   # vedo quale tk è min
             tk = tk_arr[idx] + (rinex_obs.gps_week_ref - gps_week_sat[ prn==prn_sat ][idx])*604800
 
+            ## TEST
             if tk > 302400:
                 tk = tk - 604800
             if tk < -302400:
@@ -118,7 +133,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
                 else:
                     eko = ek
                 if j == 49:
-                    print "Iterations didn't go through in 50 steps"
+                    print "WARNING: Kepler Eqn didn't converge for sat " + str(s)
                     break
             ##
             vk = np.arctan2(   ( (( 1- ( e[ prn == prn_sat][idx] )**2 )**0.5)*np.sin(ek) ) , ( np.cos(ek)-e[ prn == prn_sat][idx] )  )

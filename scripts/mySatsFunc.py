@@ -43,6 +43,69 @@ def sat_selection( rinex_obj, sats_list, start, stop ):
             sats_list_new.append(sa)
     return np.asarray( sats_list_new )
 ##
+def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
+    '''calculate Azimuth and elevation for a sattelite given our position in ECEF
+    based upon calcAzEl() in
+    http://home-2.worldonline.nl/~samsvl/stdalone.pas
+    '''
+
+    from math import sqrt, atan, degrees
+    import numpy
+    
+    x = rinex.xyz[0]
+    y = rinex.xyz[1]
+    z = rinex.xyz[2]
+
+    Xs = [Xs, Ys, Zs]
+    Xu = [ x,  y, z ]
+    
+    p = sqrt(x*x + y*y)
+    pi = util.gpsPi
+    if p == 0:
+        Az = 0
+        El = 0
+        return Az, El
+
+    R = sqrt(x*x + y*y + z*z)
+
+    e = numpy.ndarray((3,3))
+
+    e[0,0] = - y / p
+    e[0,1] = + x / p
+    e[0,2] = 0.0
+    e[1,0] = - x*z / (p*R)
+    e[1,1] = - y*z / (p*R)
+    e[1,2] = p / R
+    e[2,0] = x / R
+    e[2,1] = y / R
+    e[2,2] = z / R
+
+    d = numpy.ndarray((3))
+
+    for k in range(3):
+        d[k] = 0.0
+        for i in range(3):
+            d[k] = d[k] + (Xs[i] - Xu[i]) * e[k,i]
+
+    s = d[2] / sqrt(d[0]*d[0] + d[1]*d[1] + d[2]*d[2])
+    if s == 1.0:
+        El = 0.5 * pi
+    else:
+        El = atan(s / sqrt(1.0 - s*s))
+
+    if d[1] == 0.0 and d[0] > 0.0:
+        Az = 0.5 * pi
+    elif d[1] == 0.0 and d[0] < 0.0:
+        Az = 1.5 * pi
+    else:
+        Az = atan(d[0] / d[1])
+        if d[1] < 0.0:
+            Az = Az + pi
+        elif d[1] > 0.0 and d[0] < 0.0:
+            Az = Az + 2.0 * pi
+
+    return degrees(Az), degrees(El)
+##
 def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     '''
         inputs:

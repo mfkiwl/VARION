@@ -66,7 +66,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     pigreco = 3.1415926535898
     speedOfLight = 299792458.0
 
-    # relativistic correction term constant
+    # relativistic correction term constant (not used so far)
     F = -4.442807633E-10
 
     # WGS-84 earth rotation rate
@@ -93,7 +93,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     i_init  = (np.asarray(data['Io']))       # Inclination angle at reference time (radians)
     i_rate  = (np.asarray(data['IDOT']))     #  Rate of inclination angle (radians/sec)
     gps_week_sat = np.asarray(data['GPSWeek'])
-    
+
     no = (mu/(a**3))**0.5
     n  = no + dn
     ## READING THE OBSERVATION RINEX -- > in order to compute the Xs,Ys,Zs at the epochs we want
@@ -108,7 +108,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
         varion, ora, sod = mO.obs_sat( data_obs[0], data_obs[1], data_obs[2], data_obs[3], data_obs[4], s )
 
         for i in xrange( len(sod) ):
-            ### DEBUG
+            
             # Time of flight
             tof = data_obs[-1][1:][i] / speedOfLight
 

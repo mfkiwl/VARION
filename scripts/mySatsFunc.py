@@ -95,9 +95,20 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
         varion, ora, sod = mO.obs_sat( data_obs[0], data_obs[1], data_obs[2], data_obs[3], data_obs[4], s )
 
         for i in xrange( len(sod) ):
-            tk_arr = ( sod[i] - te[ prn==prn_sat ] )                                           # tk = t - te
+            ### DEBUG
+            tof = data_obs[-1][1:][i] / speedOfLight
+            ### correction due to the earth rotation
+            ## alpha = tof * we
+            trasmitTime = (sod[i] + rinex_obs.gps_sow_ref) - tof
+            tk_arr = ( trasmitTime - te[ prn==prn_sat ] )                              # tk = t - te
             val, idx = min((val, idx) for (idx, val) in enumerate( np.abs(tk_arr) ))   # vedo quale tk è min
-            tk = tk_arr[idx]
+            tk = tk_arr[idx] + (rinex_obs.gps_week_ref - gps_week_sat[ prn==prn_sat ][idx])*604800
+
+            if tk > 302400:
+                tk = tk - 604800
+            if tk < -302400:
+                tk = tk + 604800
+
             mk = mo[ prn == prn_sat][ idx] + n[ prn == prn_sat][ idx]*tk        
             ## iterazioni per calcolare Ek
             eko = mk
@@ -112,18 +123,29 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
             ##
             vk = np.arctan2(   ( (( 1- ( e[ prn == prn_sat][idx] )**2 )**0.5)*np.sin(ek) ) , ( np.cos(ek)-e[ prn == prn_sat][idx] )  )
             uk = ome[ prn == prn_sat ][idx] + vk
+
             duk = (  cuc[ prn == prn_sat][idx]*np.cos(2*uk) + (cus[ prn == prn_sat][idx] * np.sin(2*uk)) )
             drk = (  crc[ prn == prn_sat][idx]*np.cos(2*uk) + (crs[ prn == prn_sat][idx] * np.sin(2*uk)) )
             dik = (  cic[ prn == prn_sat][idx]*np.cos(2*uk) + (cis[ prn == prn_sat][idx] * np.sin(2*uk)) )
+
             omek = ome[ prn == prn_sat ][idx] + duk
+
             rk   = a[ prn == prn_sat ][idx]*( 1- e[ prn == prn_sat ][idx]*np.cos(ek)) + drk
             ik   = i_init[ prn == prn_sat ][idx]  +  i_rate[ prn == prn_sat ][idx] * tk + dik
+
             xk   = rk*np.cos(omek+vk)
             yk   = rk*np.sin(omek+vk)
-            lk   = lo[ prn == prn_sat ][idx]  + ome_dot[ prn == prn_sat ][idx] * tk - omegae * (sod[i])               
+
+            lk   = lo[ prn == prn_sat ][idx]  + ome_dot[ prn == prn_sat ][idx] * tk - omegae * (sod[i]+rinex_obs.gps_sow_ref)  
+
             Xk   = xk*np.cos(lk) - yk * np.sin(lk) * np.cos(ik)
             Yk   = xk*np.sin(lk) + yk * np.cos(lk) * np.cos(ik)
             Zk   = yk*np.sin(ik)
+
+            # Correction the satellite position for the time it took the message to get to the reciver
+            #Xk   =  Xk * np.cos(alpha) + Yk * np.sin(alpha)
+            #Yk   = -Xk * np.sin(alpha) + Yk * np.cos(alpha)
+
             Xk_list.append( Xk )
             Yk_list.append( Yk )
             Zk_list.append( Zk )

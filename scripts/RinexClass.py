@@ -84,6 +84,23 @@ class RinexFile:
 						l2_index = index[l2_mas][0]
 						break
 			return np.asarray([c1_index, l1_index, l2_index]), lns[4:6]
+		### DEBUGG and TEST
+		def GPSTIME(file_nam):
+			'''
+			'''
+			import re
+			import GPS
+			with open(file_nam, "r") as f: 
+				for i in range(100):
+					lns = f.readline()
+					if "TIME OF FIRST OBS" in lns:
+						lns = lns.split()
+						year  = int(lns[0])
+						month = int(lns[1])
+						day   = int(lns[2])
+						gps_week_ref, secsOfWeek, gpsDay, gpsSOD = GPS.gpsFromUTC(year, month, day,  0,  0,  0, leapSecs=0)
+						break
+			return gps_week_ref, secsOfWeek
 		def INTERVAL(file_nam):   ### DEBUGGG AND TEST
 			'''
 			Function that returns the inteval of the obs
@@ -119,6 +136,7 @@ class RinexFile:
 		self.xyz = COORD_XYZ( self.nam )
 		self.int = INTERVAL( self.nam )
 		self.typ, self.obs = TYPE_OBS( self.nam )
+		self.gps_week_ref, self.gps_sow_ref = GPSTIME( self.nam )
 		self.data = ""
 	#######################################################################
 	def READ_RINEX(self):

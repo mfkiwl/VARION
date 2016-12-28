@@ -92,6 +92,8 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     ome_dot = (np.asarray(data['OMEGA DOT']))# Rate of right ascension (radians/sec)
     i_init  = (np.asarray(data['Io']))       # Inclination angle at reference time (radians)
     i_rate  = (np.asarray(data['IDOT']))     #  Rate of inclination angle (radians/sec)
+    gps_week_sat = np.asarray(data['GPSWeek'])
+    
     no = (mu/(a**3))**0.5
     n  = no + dn
     ## READING THE OBSERVATION RINEX -- > in order to compute the Xs,Ys,Zs at the epochs we want
@@ -112,7 +114,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
 
             ### correction due to the earth rotation
             # alpha = tof * we
-            
+
             trasmitTime = (sod[i] + rinex_obs.gps_sow_ref) - tof
             tk_arr = ( trasmitTime - te[ prn==prn_sat ] )                              # tk = t - te
             val, idx = min((val, idx) for (idx, val) in enumerate( np.abs(tk_arr) ))   # vedo quale tk è min

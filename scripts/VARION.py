@@ -296,7 +296,7 @@ for i in myStationsProc:
 							inde = (np.where(X_list[i][mask_list[i]][k] ==  sIP_G_list[i][0][mask]) )
 							f.write( str(sIP_G_list[i][0][mask][inde[0][0]]) + '\t' + '\t' + str(cum_list[i][k]) + '\t' + '\t' + \
 										str(sIP_G_list[i][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i][2][mask][inde[0][0]]) + \
-										 str(sIP_G_list[i][-1][mask][inde[0][0]]) +'\n')
+										    '\t' + '\t' + str(sIP_G_list[i][-1][mask][inde[0][0]]) +'\n')
 						except IndexError:
 							continue
 				except TypeError or IndexError:

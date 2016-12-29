@@ -60,7 +60,7 @@ def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
     Xu = [ x,  y, z ]
     
     p = sqrt(x*x + y*y)
-    pi = util.gpsPi
+    pi = 3.1415926535898
     if p == 0:
         Az = 0
         El = 0

@@ -274,8 +274,10 @@ def track_sat(sIP, sat_name, start, stop ):
     y     =  sIP[3][mask_st][mask_tm] 
     z     =  sIP[4][mask_st][mask_tm] 
     toe   =  sIP[5][mask_st][mask_tm] 
+    az    =  sIP[6][mask_st][mask_tm]
+    el    =  sIP[7][mask_st][mask_tm]
         
-    return sod, names, x, y, z, toe
+    return sod, names, x, y, z, toe, az, el
 #####
 def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
     '''

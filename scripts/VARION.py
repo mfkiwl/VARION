@@ -235,7 +235,7 @@ for i in myStationsProc:
 				sIP_sat = mSF.track_sat( sIP, sa, start, stop  )
 				####
 				phi_ipp, lambda_ipp, h_ipp = mSF.coord_ipps( rinex_obs.xyz[0],rinex_obs.xyz[1],rinex_obs.xyz[2], sIP_sat[2], sIP_sat[3], sIP_sat[4], h_iono)
-				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp)  )
+				sIP_G_list.append(  (sIP_sat[0],sIP_sat[1],phi_ipp,lambda_ipp,sIP_sat[6],sIP_sat[7])  )
 		print "VARION algorithm has been computed and"
 		print "IPP location has been computed for the satellites selected in"
 		print("--- %s seconds ---" % (time.time() - start_time))
@@ -287,7 +287,7 @@ for i in myStationsProc:
 				mask = (sIP_G_list[i][0] >= start) & (sIP_G_list[i][0] <= stop)
 		
 				f = open(out_dir + '/' + str( rinex_obs.nam ) +'_' + str(sats_write_1[i]) + '_' + str(args.hIono) + '.txt', 'w')
-				f.write('sow' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\n')
+				f.write('sod' + '\t' + '\t'  + '\t' + 'sTEC' + '\t' + '\t'+ '\t' 'lon' + '\t' + '\t'+ '\t' 'lat'+ '\t' + '\t'+ '\t' 'ele' + '\n')
 				try:
 					for k in xrange( len(cum_list[i]) ):
 						try:
@@ -295,7 +295,8 @@ for i in myStationsProc:
 							## BUG FIXED  --> try with 30 s data
 							inde = (np.where(X_list[i][mask_list[i]][k] ==  sIP_G_list[i][0][mask]) )
 							f.write( str(sIP_G_list[i][0][mask][inde[0][0]]) + '\t' + '\t' + str(cum_list[i][k]) + '\t' + '\t' + \
-										str(sIP_G_list[i][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i][2][mask][inde[0][0]]) +'\n')
+										str(sIP_G_list[i][3][mask][inde[0][0]]) + '\t' + '\t' + str(sIP_G_list[i][2][mask][inde[0][0]]) + \
+										 str(sIP_G_list[i][-1][mask][inde[0][0]]) +'\n')
 						except IndexError:
 							continue
 				except TypeError or IndexError:

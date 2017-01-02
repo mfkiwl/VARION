@@ -138,7 +138,41 @@ class RinexFile:
 		self.typ, self.obs = TYPE_OBS( self.nam )
 		self.gps_week_ref, self.gps_sow_ref = GPSTIME( self.nam )
 		self.data = ""
-	#######################################################################
+		self.phi  = "" ; self.lmbd = "" ; self.hell = ""
+	#######################################################################  
+	def COORD_GEOG(self):
+		'''
+		input:  self
+		output: Latitude (F) and Longitude (L) and h WGS84
+		'''
+		# Longitudine calcolabile senza iterazioni
+		x = self.xyz[0]; y = self.xyz[1]; z = self.xyz[2]
+		L = np.arctan2(y,x)
+		r = (x**2 + y**2)**0.5
+		# WGS84 parameters
+		a = 6378137
+		f = 1/298.257223563
+		b = a*(1-f)
+		e = (1-(b**2)/(a**2))**0.5
+		# I step
+		# ip h=0
+		h1 = 0.0
+		F  = np.arctan2(z, r*(1-e**2))
+		Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
+		# Max 100 iterations --> usually break after 4 iterations
+		for i in xrange(0,100):
+				h  = r/np.cos(F) - Rn
+				if abs(h - h1) <= 0.00001: break
+				F  = np.arctan2((z*(Rn+h)),(Rn*(1-e**2)+h)*r)
+				Rn = a/((1-(e**2)*(np.sin(F))**2))**0.5
+				h1 = h
+		L_grad = L/(np.pi)*180
+		F_grad = F/(np.pi)*180
+
+		self.phi  = F_grad
+		self.lmbd = L_grad
+		self.hell = h
+	########################################################
 	def READ_RINEX(self):
 		'''
 		Function to stock the obs of the rinex
@@ -218,9 +252,9 @@ class RinexFile:
 											l2.append(   float('.'.join(( l2_before_dec, l2_after_dec[0:3])))  *lam2   )            
 											# slicing
 											if num_lin == 1:
-											    sats.append( ln[-1][skip_num:len(ln[-1])][(k)/(2/num_lin)*3:(k)/(2/num_lin)*3+3] )      
+												sats.append( ln[-1][skip_num:len(ln[-1])][(k)/(2/num_lin)*3:(k)/(2/num_lin)*3+3] )      
 											else:
-											    sats.append( ln[-1][skip_num:len(ln[-1])][(k-1)*3:(k-1)*3+3] )
+												sats.append( ln[-1][skip_num:len(ln[-1])][(k-1)*3:(k-1)*3+3] )
 											timing = (  datetime.time( int(ln[3]), int(ln[4]) , int(float(ln[5][0:2])) ) )
 											ora.append ( timing.isoformat() )
 											sod.append(int(ln[3])*60*60 + int(ln[4])*60 + float(ln[5][0:3]))
@@ -242,9 +276,9 @@ class RinexFile:
 											ora.append ( timing.isoformat() )
 											sod.append(int(ln[3])*60*60 + int(ln[4])*60 + float(ln[5][0:3]))     
 											if k <= 23:
-											            sats.append(ln[-1][2:len(ln[-1])][(k)/(2/num_lin)*3:(k)/(2/num_lin)*3+3])  
+														sats.append(ln[-1][2:len(ln[-1])][(k)/(2/num_lin)*3:(k)/(2/num_lin)*3+3])  
 											else:
-											            sats.append(ln_2[0][((k+1)/(2/num_lin)-13)*3:((k+1)/(2/num_lin)-13)*3+3])
+														sats.append(ln_2[0][((k+1)/(2/num_lin)-13)*3:((k+1)/(2/num_lin)-13)*3+3])
 		sats_arr = np.asarray(sats)                                          
 		ora_arr  = np.asarray(ora)
 		sod_arr  = np.asarray(sod)

@@ -43,13 +43,13 @@ def sat_selection( rinex_obj, sats_list, start, stop ):
             sats_list_new.append(sa)
     return np.asarray( sats_list_new )
 ##
-def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
+def calculateAzimuthElevation_old(Xs, Ys, Zs, rinex):
     '''calculate Azimuth and elevation for a sattelite given our position in ECEF
     based upon calcAzEl() in
     http://home-2.worldonline.nl/~samsvl/stdalone.pas
     '''
 
-    from math import sqrt, atan, degrees
+    from math import sqrt, atan, degrees  # MAYBE BUG BEACAUSE NOT USED ATAN2!!!!!!
     import numpy
     
     x = rinex.xyz[0]
@@ -105,6 +105,38 @@ def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
             Az = Az + 2.0 * pi
 
     return degrees(Az), degrees(El)
+##
+def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
+    '''calculate Azimuth and elevation for a sattelite given our position in ECEF
+    based Geodesic Formulas
+    '''
+
+    from math import sqrt, atan2, degrees, fabs, sin, cos, acos
+    import numpy
+
+    pi = 3.1415926535898
+    
+    Xr = rinex.xyz[0]
+    Yr = rinex.xyz[1]
+    Zr = rinex.xyz[2]
+
+    Range = sqrt(x*x + y*y + z*z)
+
+    # Compute the Satellite Unit Vector
+    unit_ex = (Xs - Xr) / Range
+    unit_ey = (Ys - Yr) / Range
+    unit_ez = (Zs - Zr) / Range
+    # Trasform to Local Reference System
+    unit_ee = -sin( (rinex.lmbd*pi/180.0) ) * unit_ex  +  cos( (rinex.lmbd*pi/180.0) ) * unit_ey  +  0.0 * unit_ez
+    unit_en = -sin( (rinex.phi *pi/180.0) ) * cos( (rinex.lmbd*pi/180.0) ) * unit_ex  + \
+              -sin( (rinex.phi *pi/180.0) ) * sin( (rinex.lmbd*pi/180.0) ) * unit_ey  +  cos ( (rinex.phi *pi/180.0) ) * unit_ez
+    unit_eu =  cos( (rinex.phi *pi/180.0) ) * cos( (rinex.lmbd*pi/180.0) ) * unit_ex  + \
+               cos( (rinex.phi *pi/180.0) ) * sin( (rinex.lmbd*pi/180.0) ) * unit_ey  +  sin ( (rinex.phi *pi/180.0) ) * unit_ez
+    # Compute Sat Elevation and Azimuth
+    Az  =  degrees( atan2(-unit_ee,-unit_en) )
+    El  =  90.0 -  degrees(acos(fabs(unit_eu)))
+
+    return Az, El
 ##
 def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     '''

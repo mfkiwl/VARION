@@ -120,7 +120,7 @@ def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
     Yr = rinex.xyz[1]
     Zr = rinex.xyz[2]
 
-    Range = sqrt(x*x + y*y + z*z)
+    Range = sqrt( (Xs-Xr)**2 + (Ys-Yr)**2 + (Zs-Zr)**2 )
 
     # Compute the Satellite Unit Vector
     unit_ex = (Xs - Xr) / Range

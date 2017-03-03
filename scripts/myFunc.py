@@ -25,7 +25,7 @@
 import numpy as np
 ##  
 def no_outlayer_mask(vector):
-    mask = (np.abs(vector) < 0.02)
+    mask = (vector>-0.2)&(vector<0.2)
     return mask
 ##
 def integrate(vector,dx):

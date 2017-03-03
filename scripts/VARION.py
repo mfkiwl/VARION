@@ -210,6 +210,7 @@ for i in myStationsProc:
 		# read the rinex with the method built inside the class
 		import time
 		start_time = time.time()
+		rinex_obs.COORD_GEOG()
 		rinex_obs.READ_RINEX()
 		print "RINEX file %s has been read in" % rinex_obs.nam
 		print("--- %s seconds ---" % (time.time() - start_time))
@@ -245,8 +246,10 @@ for i in myStationsProc:
 		stec_list = []
 		sod_list = []
 		for i in xrange( len(sats_write_1) ):
-				mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex_obs.int )  ## modify the treshold to remove the outlayer
-				stec_list.append(  lista_G[i][0][mask] * const_tec / rinex_obs.int  ) 
+				dstec = lista_G[i][0] * const_tec / rinex_obs.int
+				mask  = mF.no_outlayer_mask( dstec )
+				#mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex_obs.int )  ## modify the treshold to remove the outlayer
+				stec_list.append(  dstec[mask] ) 
 				sod_list.append(  lista_G[i][2][mask]  )
 		  
 		################################################################################

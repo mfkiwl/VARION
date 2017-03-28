@@ -248,7 +248,6 @@ for i in myStationsProc:
 		for i in xrange( len(sats_write_1) ):
 				dstec = lista_G[i][0] * const_tec / rinex_obs.int
 				mask  = mF.no_outlayer_mask( dstec )
-				#mask = mF.no_outlayer_mask( lista_G[i][0] * const_tec / rinex_obs.int )  ## modify the treshold to remove the outlayer
 				stec_list.append(  dstec[mask] ) 
 				sod_list.append(  lista_G[i][2][mask]  )
 		  

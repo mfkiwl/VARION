@@ -107,7 +107,8 @@ def calculateAzimuthElevation_old(Xs, Ys, Zs, rinex):
     return degrees(Az), degrees(El)
 ##
 def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
-    '''calculate Azimuth and elevation for a sattelite given our position in ECEF
+    '''
+    calculate Azimuth and elevation for a sattelite given our position in ECEF
     based Geodesic Formulas
     '''
 
@@ -137,6 +138,36 @@ def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
     El  =  90.0 -  degrees(acos(fabs(unit_eu)))
 
     return Az, El
+##
+def calculateENUsatellite(Xs, Ys, Zs, rinex):
+    '''
+    calculate local coordinates E, N, U for a sattelite given the reicever position in ECEF
+    based Geodesic Formulas
+    '''
+
+    from math import sqrt, atan2, degrees, fabs, sin, cos, acos
+    import numpy
+
+    pi = 3.1415926535898
+    
+    Xr = rinex.xyz[0]
+    Yr = rinex.xyz[1]
+    Zr = rinex.xyz[2]
+
+    # Compute the Satellite Vector
+    vector_ex = (Xs - Xr) 
+    vector_ey = (Ys - Yr) 
+    vector_ez = (Zs - Zr)
+    # Trasform to Local Reference System
+    vector_ee = -sin( (rinex.lmbd*pi/180.0) ) * vector_ex  +  cos( (rinex.lmbd*pi/180.0) ) * vector_ey  +  0.0 * vector_ez
+
+    vector_en = -sin( (rinex.phi *pi/180.0) ) * cos( (rinex.lmbd*pi/180.0) ) * vector_ex  + \
+              -sin( (rinex.phi *pi/180.0) ) * sin( (rinex.lmbd*pi/180.0) ) * vector_ey  +  cos ( (rinex.phi *pi/180.0) ) * vector_ez
+
+    vector_eu =  cos( (rinex.phi *pi/180.0) ) * cos( (rinex.lmbd*pi/180.0) ) * vector_ex  + \
+               cos( (rinex.phi *pi/180.0) ) * sin( (rinex.lmbd*pi/180.0) ) * vector_ey  +  sin ( (rinex.phi *pi/180.0) ) * vector_ez
+
+    return vector_ee, vector_en, vector_eu
 ##
 def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     '''

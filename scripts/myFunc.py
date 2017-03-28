@@ -74,4 +74,21 @@ def coord_geog(x,y,z):
     L_grad = L/(np.pi)*180
     F_grad = F/(np.pi)*180
     return F_grad, L_grad, h
+##
+def coord_cartesiane(phi, lam, h):
+    '''
+    input:  Latitude (phi) and Longitude (lam) and h WGS84
+    output: X, Y, Z
+    '''
+    # WGS84 parameters
+    a = 6378137
+    f = 1/298.257223563
+    b = a*(1-f)
+    e = (1-(b**2)/(a**2))**0.5
+    Rn = a/((1-(e**2)*(np.sin(phi))**2))**0.5
+    ##
+    x = (Rn + h)*np.cos(phi)*np.cos(lam)
+    y = (Rn + h)*np.cos(phi)*np.sin(lam)
+    z = (Rn*(1-e**2)+h)*np.sin(phi)
+    return x, y, z
 ########################################################

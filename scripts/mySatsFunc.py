@@ -139,9 +139,9 @@ def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
 
     return Az, El
 ##
-def calculateENUsatellite(Xs, Ys, Zs, rinex):
+def calculateENUsatellite(Xipp, Yipp, Zipp, rinex):
     '''
-    calculate local coordinates E, N, U for a sattelite given the reicever position in ECEF
+    calculate local coordinates E, N, U for a IPPs respect to the recever position in ECEF
     based Geodesic Formulas
     '''
 
@@ -155,9 +155,9 @@ def calculateENUsatellite(Xs, Ys, Zs, rinex):
     Zr = rinex.xyz[2]
 
     # Compute the Satellite Vector
-    vector_ex = (Xs - Xr) 
-    vector_ey = (Ys - Yr) 
-    vector_ez = (Zs - Zr)
+    vector_ex = (Xipp - Xr) 
+    vector_ey = (Yipp - Yr) 
+    vector_ez = (Zipp - Zr)
     # Trasform to Local Reference System
     vector_ee = -sin( (rinex.lmbd*pi/180.0) ) * vector_ex  +  cos( (rinex.lmbd*pi/180.0) ) * vector_ey  +  0.0 * vector_ez
 

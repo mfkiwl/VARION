@@ -27,4 +27,4 @@ Then move with the terminal into the "/script" dir and execute the VARION script
 
 ### Contacts ###
 
-giorgio.savastano@uniroma1.it
+giorgio.savastano@uniroma1.it or giorgio.savastano@jpl.nasa.gov

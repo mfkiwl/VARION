@@ -8,12 +8,12 @@ Then move with the terminal into the "/script" dir and execute the VARION script
 
 ## LINUX
         $ ./VARION.py -h      --->     to run the help
-		$ ./VARION.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 G08 G10
+        $ ./VARION.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 G08 G10
         $ ./VARION.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 -brdc    ---> to use brdc file
         $ ./VARION.py -time 08:00 09:30 -brdc -height 450       ---> change the height of the Ionosperic layer
 
 ## OS
-		$ python VARION_next.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 G08 G10
+        $ python VARION_next.py -staz ahup ainp -time 08:00 09:30 -sat G04 G07 G08 G10
 
 ## WINDOWS
         $ C:\Python27\python.exe C:\Users\Username\Desktop\my_python_script.py -h

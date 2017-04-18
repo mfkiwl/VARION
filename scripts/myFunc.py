@@ -85,10 +85,10 @@ def coord_cartesiane(phi, lam, h):
     f = 1/298.257223563
     b = a*(1-f)
     e = (1-(b**2)/(a**2))**0.5
-    Rn = a/((1-(e**2)*(np.sin(phi))**2))**0.5
+    Rn = a/((1-(e**2)*(np.sin(phi*np.pi/180.0))**2))**0.5
     ##
-    x = (Rn + h)*np.cos(phi)*np.cos(lam)
-    y = (Rn + h)*np.cos(phi)*np.sin(lam)
-    z = (Rn*(1-e**2)+h)*np.sin(phi)
+    x = (Rn + h)*np.cos(phi*np.pi/180.0)*np.cos(lam*np.pi/180.0)
+    y = (Rn + h)*np.cos(phi*np.pi/180.0)*np.sin(lam*np.pi/180.0)
+    z = (Rn*(1-e**2)+h)*np.sin(phi*np.pi/180.0)
     return x, y, z
 ########################################################

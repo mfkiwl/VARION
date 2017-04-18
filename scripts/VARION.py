@@ -6,12 +6,10 @@
 #
 # Notice: Please acknowledge the use of the above software in any publications:
 #    ``VARION software was provided by G. Savastano et al.,
-#      and is available at URL: http://''.
+#      and is available at URL: https://github.com/giorgiosavastano/VARION''.
 #
-# Reference: G. Savastano, A. Komjathy, O. Verkhoglyadova, A. Mazzoni, M. Crespi and Y. Wei 
-# 			 "Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone
-# 			 GNSS Receiver: A Preliminary Feasibility Demonstration",
-# 			 ARXIV.
+# Reference: Savastano, G. et al. Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone
+# GNSS Receiver: A Preliminary Feasibility Demonstration. Sci. Rep. 7, 46607; doi: 10.1038/srep46607 (2017).
 #
 # Please send a copy of such publications to either G. Savastano or A. Komjathy:
 #  Giorgio Savastano                      		     	Dr. Attila Komjathy

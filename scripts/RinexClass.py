@@ -1,12 +1,14 @@
 # \author Giorgio Savastano, 2015. giorgio.savastano(at)uniroma1.it
 #
+#
 # -------------------------------------------------------------------------
 #
 # Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
 #
 # VARION is a opean source software for GNSS processing
 #
-# This file is part of VARION.
+# This file is part of VARION
+# and was modified by Michela Ravanelli (2017)  michela.ravanelli(at)uniroma1.it
 #
 # VARION is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -233,8 +235,8 @@ class RinexFile:
 											obs = re.findall('\S+\.\S+',lns[i+1+k])
 											if len( obs ) <= 3: continue
 											c1_before_dec, c1_after_dec = str(obs[ self.typ[0] ]).split('.')                         
-											l1_before_dec, l1_after_dec = str(obs[ self.typ[0] ]).split('.')     
-											l2_before_dec, l2_after_dec = str(obs[ self.typ[0] ]).split('.')
+											l1_before_dec, l1_after_dec = str(obs[ self.typ[1] ]).split('.')     
+											l2_before_dec, l2_after_dec = str(obs[ self.typ[2] ]).split('.')
 											c1.append(   float('.'.join(( c1_before_dec, c1_after_dec[0:3])))   )    
 											l1.append(   float('.'.join(( l1_before_dec, l1_after_dec[0:3])))  *lam1   )
 											l2.append(   float('.'.join(( l2_before_dec, l2_after_dec[0:3])))  *lam2   )                     

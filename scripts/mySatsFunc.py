@@ -43,6 +43,45 @@ def sat_selection( rinex_obj, sats_list, start, stop ):
             sats_list_new.append(sa)
     return np.asarray( sats_list_new )
 ##
+
+def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
+    '''calculate Azimuth and elevation for a sattelite given our position in ECEF
+    based Geodesic Formulas
+    '''
+
+    import numpy as np
+
+    pi = np.pi
+    
+    Xr = rinex.xyz[0]
+    Yr = rinex.xyz[1]
+    Zr = rinex.xyz[2]
+
+    Range = np.sqrt( (Xs-Xr)**2 + (Ys-Yr)**2 + (Zs-Zr)**2 )
+
+    # Compute the Satellite Unit Vector
+    unit_ex = (Xs - Xr) / Range
+    unit_ey = (Ys - Yr) / Range
+    unit_ez = (Zs - Zr) / Range
+    #pdb.set_trace()
+    # Trasform to Local Reference System
+    unit_ee = -np.sin( (rinex.lmbd*pi/180.0) ) * unit_ex  +  np.cos( (rinex.lmbd*pi/180.0) ) * unit_ey  +  0.0 * unit_ez
+    unit_en = -np.sin( (rinex.phi *pi/180.0) ) * np.cos( (rinex.lmbd*pi/180.0) ) * unit_ex  + \
+              -np.sin( (rinex.phi *pi/180.0) ) * np.sin( (rinex.lmbd*pi/180.0) ) * unit_ey  +  np.cos ( (rinex.phi *pi/180.0) ) * unit_ez
+    unit_eu =  np.cos( (rinex.phi *pi/180.0) ) * np.cos( (rinex.lmbd*pi/180.0) ) * unit_ex  + \
+               np.cos( (rinex.phi *pi/180.0) ) * np.sin( (rinex.lmbd*pi/180.0) ) * unit_ey  +  np.sin ( (rinex.phi *pi/180.0) ) * unit_ez
+    # Compute Sat Elevation and Azimuth
+    Az1=np.degrees(np.arctan2(unit_ee,unit_en))
+    if Az1>=0:
+        Az=Az1
+    else:
+        Az=360+Az1     
+    
+    El  =  90.0 -  np.degrees(np.arccos(np.fabs(unit_eu))) 
+
+    return Az, El
+
+
 def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     '''
         inputs:
@@ -101,6 +140,7 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
 
     prn_sat_list = []
     Xk_list = []; Yk_list = []; Zk_list = []
+    Az_list = []; El_list = []
     sod_list = []
     toe_list = []
     for s in sats_write:
@@ -163,9 +203,15 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
             #Xk   =  Xk * np.cos(alpha) + Yk * np.sin(alpha)
             #Yk   = -Xk * np.sin(alpha) + Yk * np.cos(alpha)
 
+            Az, El = calculateAzimuthElevation(Xk, Yk, Zk, rinex_obs)
+
             Xk_list.append( Xk )
             Yk_list.append( Yk )
             Zk_list.append( Zk )
+
+            Az_list.append( Az )
+            El_list.append( El )
+
             prn_sat_list.append( s )
             sod_list.append( sod[i])
             toe_list.append( te[ prn==prn_sat ][ idx] )
@@ -176,8 +222,10 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     Xk_arr = np.asarray( Xk_list )
     Yk_arr = np.asarray( Yk_list )
     Zk_arr = np.asarray( Zk_list )
+    Az_arr = np.asarray( Az_list )
+    El_arr = np.asarray( El_list )
 
-    return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr
+    return prn_sat_arr, sod_arr, Xk_arr, Yk_arr, Zk_arr, toe_arr, Az_arr, El_arr
 #####
 def track_sat(sIP, sat_name, start, stop ):
     '''
@@ -202,8 +250,10 @@ def track_sat(sIP, sat_name, start, stop ):
     y     =  sIP[3][mask_st][mask_tm] 
     z     =  sIP[4][mask_st][mask_tm] 
     toe   =  sIP[5][mask_st][mask_tm] 
+    az    =  sIP[6][mask_st][mask_tm]
+    el    =  sIP[7][mask_st][mask_tm]
         
-    return sod, names, x, y, z, toe
+    return sod, names, x, y, z, toe, az, el
 #####
 def coord_ipps( xr,yr,zr,xs_arr,ys_arr,zs_arr,h_iono):
     '''

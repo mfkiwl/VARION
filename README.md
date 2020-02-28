@@ -25,7 +25,7 @@ Then move with the terminal into the "/script" dir and execute the VARION script
 - Numpy
 - Pandas
 
-#### References ###
+### References ###
 
 Savastano, G. et al. Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone GNSS Receiver: 
 A Preliminary Feasibility Demonstration. Sci. Rep. 7, 46607; doi: 10.1038/srep46607 (2017)

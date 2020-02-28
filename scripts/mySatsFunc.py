@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# \author Giorgio Savastano, 2015. giorgio.savastano(at)uniroma1.it
-#
+# author Giorgio Savastano,  2015         <giorgio.savastano(at)uniroma1.it>
+# modified by Michela Ravanelli, 2018     <michela.ravanelli(at)uniroma1.it>
+
 # -------------------------------------------------------------------------
 #
 # Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
@@ -28,21 +29,43 @@ import readRinexNav as RN
 import myObs as mO
 import myFunc as mF
 ##
-def sat_selection( rinex_obj, sats_list, start, stop ):
+def skip_nan(rinex_obs,array):
+    data=rinex_obs.data
+
+    tau  = np.where(np.isnan(array)==True)[0]
+    data = map(lambda z: np.delete(data[z],tau),np.arange(0,len(data)))
+
+    return data
+
+#########################################################################
+def sat_selection( rinex_obs, sats_list, start, stop ):
     """
     Functions that select the satellites in view in a time period
     """
     sats_list_new = []
+    rinex_obs.data  =  skip_nan(rinex_obs,rinex_obs.data[5])
+
     for sa in sats_list:
-        mask_sate = (rinex_obj.data[0] == sa)
-        mask_time = (rinex_obj.data[2][mask_sate] >= start) & (rinex_obj.data[2][mask_sate] <= stop)
-        length = (stop - start) / (rinex_obj.int)
-        if len(rinex_obj.data[2][mask_sate][mask_time]) <= ( length / 4.0 ):
+
+        sat_gps=rinex_obs.data[0]
+        ora_gps=rinex_obs.data[1]
+        sod_gps=rinex_obs.data[2]
+        c1c_gps=rinex_obs.data[5]
+        l1c_gps=rinex_obs.data[3]
+        c2w_gps=rinex_obs.data[6]
+        l2w_gps=rinex_obs.data[4]
+
+        mask_sate = (sat_gps == sa)
+        mask_time = (sod_gps[mask_sate] >= start) & (sod_gps[mask_sate] <= stop)
+        length = (stop - start) / (rinex_obs.int)
+        if len(sod_gps[mask_sate][mask_time]) <= ( length / 4.0 ):
             continue
         else:
             sats_list_new.append(sa)
     return np.asarray( sats_list_new )
-##
+#########################################################################
+   
+    
 
 def calculateAzimuthElevation(Xs, Ys, Zs, rinex):
     '''calculate Azimuth and elevation for a sattelite given our position in ECEF
@@ -133,10 +156,25 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     i_rate  = (np.asarray(data['IDOT']))     #  Rate of inclination angle (radians/sec)
     gps_week_sat = np.asarray(data['GPSWeek'])
 
+
+
     no = (mu/(a**3))**0.5
     n  = no + dn
     ## READING THE OBSERVATION RINEX -- > in order to compute the Xs,Ys,Zs at the epochs we want
+    rinex_obs.data  =  skip_nan(rinex_obs,rinex_obs.data[5])
+
     data_obs   = rinex_obs.data
+
+    sat_gps=rinex_obs.data[0]
+    ora_gps=rinex_obs.data[1]
+    sod_gps=rinex_obs.data[2]
+    c1c_gps=rinex_obs.data[5]
+    l1c_gps=rinex_obs.data[3]
+    c2w_gps=rinex_obs.data[6]
+    l2w_gps=rinex_obs.data[4]
+    c5_gps=rinex_obs.data[9]
+    l5_gps=rinex_obs.data[10]
+
 
     prn_sat_list = []
     Xk_list = []; Yk_list = []; Zk_list = []
@@ -144,13 +182,15 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     sod_list = []
     toe_list = []
     for s in sats_write:
-        prn_sat = int( s[1:3] )
-        varion, ora, sod = mO.obs_sat( data_obs[0], data_obs[1], data_obs[2], data_obs[3], data_obs[4], s )
+        prn_sat = int( s[1:3] ) 
+        print s
+        varion, ora, sod = mO.obs_sat( sat_gps, ora_gps, sod_gps, l1c_gps, l2w_gps, s )
+
 
         for i in xrange( len(sod) ):
             
             # Time of flight
-            tof = data_obs[-1][1:][i] / speedOfLight
+            tof = c1c_gps[1:][i] / speedOfLight
 
             ### correction due to the earth rotation
             # alpha = tof * we
@@ -171,6 +211,9 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
             eko = mk
             for j in xrange(50):   
                 ek = mk + e[ prn == prn_sat][idx]*np.sin(eko)
+               
+                if np.isnan(abs( ek-eko ))==True:
+                    pdb.set_trace()
                 if abs( ek-eko ) <= 10e-10: break
                 else:
                     eko = ek

@@ -212,7 +212,10 @@ for i in myStationsProc:
 		rinex_obs.COORD_GEOG()
 		print "RINEX file %s has been read in" % rinex_obs.nam
 		print("--- %s seconds ---" % (time.time() - start_time))
-		# select just the satellite in view
+
+		rinex_obs.data  =    mSF.skip_nan(rinex_obs,rinex_obs.data[5])
+
+		#select just the satellite in view
 		sats_write_1 = mSF.sat_selection( rinex_obs, sats_write, start, stop ) 
 		
 		try:
@@ -280,7 +283,7 @@ for i in myStationsProc:
 					Y_list.append(0.0)
 					mask_list.append(0.0)
 					diff_list.append(0.0)
-					cum_list.append(0.0)       
+					cum_list.append(0.0)
 		################################################################################
 		### Create the .txt file
 		################################################################################

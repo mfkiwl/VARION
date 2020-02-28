@@ -30,6 +30,7 @@ from datetime import datetime
 from pandas import DataFrame
 from io import BytesIO
 
+
 def readRinexNav(fn,writeh5=None):
 
     stem,ext = splitext(expanduser(fn))
@@ -73,8 +74,11 @@ def readRinexNav(fn,writeh5=None):
 
     strio = BytesIO(raws.encode())
     darr = np.genfromtxt(strio,delimiter=nfloat)
+    #pdb.set_trace()
 
-    if fn[:4] == 'brdc':
+    #[fn:4] giorgio
+    if 'brdc' in fn[:]:
+        print 'brdc'
         nav= DataFrame(np.hstack((np.asarray(sv,int)[:,None],darr)), epoch,
                ['sv','SVclockBias','SVclockDrift','SVclockDriftRate','IODE',
                 'Crs','DeltaN','M0','Cuc','Eccentricity','Cus','sqrtA','TimeEph',
@@ -82,6 +86,7 @@ def readRinexNav(fn,writeh5=None):
                 'CodesL2','GPSWeek','L2Pflag','SVacc','SVhealth','TGD','IODC',
                 'TransTime','FitIntvl', 'spare_1', 'spare_2'])
     else:
+        print 'nav'
         nav= DataFrame(np.hstack((np.asarray(sv,int)[:,None],darr)), epoch,
                ['sv','SVclockBias','SVclockDrift','SVclockDriftRate','IODE',
                 'Crs','DeltaN','M0','Cuc','Eccentricity','Cus','sqrtA','TimeEph',

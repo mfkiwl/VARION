@@ -41,11 +41,13 @@ def integrate(vector,dx):
     for i in xrange(0,len(aree)):
         aree[i] = ((vector[i]+vector[i+1])*dx)/2.0      
     cum = np.zeros(len(aree))
-    cum[0] = aree[0]
+
+    cum[0]= aree[0]    
     for i in xrange(1,len(cum)):
         cum[i] = cum[i-1] + (aree[i])          
-    return cum
-##   
+    cum = np.concatenate((np.array([0.0]),cum))
+    return cum   
+## 
 def coord_geog(x,y,z):
     '''
     input:  X,Y,Z

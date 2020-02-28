@@ -1,7 +1,7 @@
 VARION Authorship
 ------------------------------------------------------------------------------
 
-The VARION software was designed in 2015 at the University of Rome “La Sapienza”,
+The VARION software was designed in 2015 at Sapienza University of Rome,
 Department of Civil, Building and Environmental Engineering, and subsequently, 
 in 2016, further developed and validated in collaboration with the Ionospheric 
 and Atmospheric Remote Sensing Group, Jet Propulsion Laboratory, Pasadena.
@@ -9,4 +9,5 @@ and Atmospheric Remote Sensing Group, Jet Propulsion Laboratory, Pasadena.
 
 List of authors
 ------------------------------------------------------------------------------
-Giorgio Savastano       giorgio.savastano@uniroma1.it       Project manager
+Giorgio Savastano       giorgio.savastano@spire.com         Project creator
+Michela Ravanelli		michela.ravanelli@uniroma1.it		Project manager	

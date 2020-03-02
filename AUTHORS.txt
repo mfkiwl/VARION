@@ -9,5 +9,5 @@ and Atmospheric Remote Sensing Group, Jet Propulsion Laboratory, Pasadena.
 
 List of authors
 ------------------------------------------------------------------------------
-Giorgio Savastano		giorgio.savastano@gmail.com			Project creator
-Michela Ravanelli		michela.ravanelli@uniroma1.it		Project manager	
+Giorgio Savastano		giorgiosavastano@gmail.com			Project creator
+Michela Ravanelli		michela.ravanelli@uniroma1.it		Project manager

@@ -1,5 +1,8 @@
 # VARION
 
+VARION is a free and open source software that processes RINEX obs files in order to estimate sTEC values.
+
+
 ## HOW TO USE VARION
 
 Download your RINEX files and copy them in the "/obs" dir. Put in the same folder also the navigation file (e.g. brdc????.??n).

@@ -4,7 +4,7 @@
 
 # -------------------------------------------------------------------------
 #
-# Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
+# Copyright (C) 2015-2020  (see AUTHORS file for a list of contributors)
 #
 # VARION is a opean source software for GNSS processing
 #
@@ -134,28 +134,8 @@ def coord_satellite( rinex_nav, rinex_obs, sats_write ):
     # WGS-84 earth rotation rate
     we = 7.292115e-5
 
-    ## READING THE NAVIGATION RINEX 
-    data = RN.readRinexNav( rinex_nav )
-
-    prn = (np.asarray(data['sv']))           # PRN number
-    te  = (np.asarray(data['TimeEph']))      # Time of Ephemeris (seconds into GPS week) 
-    a   = (np.asarray(data['sqrtA'])) **2    # Semi-major axis (meters)
-    mo  = (np.asarray(data['M0']))           # Mean anomaly at reference time  (radians)
-    e   = (np.asarray(data['Eccentricity'])) # Eccentricity (unitless)
-    cuc = (np.asarray(data['Cuc']))          # Amplitude of the cosine harmonic correction term to the argument of latitude (radians) 
-    cus = (np.asarray(data['Cus']))          # Amplitude of the sine harmonic correction term to the argument of latitude (radians)
-    crc = (np.asarray(data['Crc']))          # Amplitude of the cosine harmonic correction term to the orbit radius (meters)
-    crs = (np.asarray(data['Crs']))          # Amplitude of the sine harmonic correction term to the orbit radius (meters)
-    cic = (np.asarray(data['Cic']))          # Amplitude of the cosine harmonic correction term to the angle of inclination (radians)
-    cis = (np.asarray(data['CIS']))          # Amplitude of the sine harmonic correction term to the angle of inclination (radians)
-    dn  = (np.asarray(data['DeltaN']))       # Mean motion difference from computed value (radians/sec)
-    lo = (np.asarray(data['OMEGA']))         # longitude of ascending node of orbit plane at weekly epoch
-    ome = (np.asarray(data['omega']))        # argument of perigee (radians)
-    ome_dot = (np.asarray(data['OMEGA DOT']))# Rate of right ascension (radians/sec)
-    i_init  = (np.asarray(data['Io']))       # Inclination angle at reference time (radians)
-    i_rate  = (np.asarray(data['IDOT']))     #  Rate of inclination angle (radians/sec)
-    gps_week_sat = np.asarray(data['GPSWeek'])
-
+    ## READING THE NAVIGATION RINEX
+    epoch, sow,prn, te,a,mo,e,cuc,cus,crc,crs,cic,cis,dn,lo,ome,ome_dot,i_init,i_rate,gps_week_sat = RN.nav_gps_v2_new(rinex_nav)
 
 
     no = (mu/(a**3))**0.5

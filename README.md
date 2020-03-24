@@ -27,8 +27,14 @@ Then move with the terminal into the "/script" dir and execute the VARION script
 
 ### References ###
 
-Savastano, G. et al. Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone GNSS Receiver: 
+[1] Savastano, G. et al. Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone GNSS Receiver: 
 A Preliminary Feasibility Demonstration. Sci. Rep. 7, 46607; doi: 10.1038/srep46607 (2017)
+
+[2] Savastano, G. et al. "Advantages of geostationary satellites for ionospheric anomaly studies: 
+Ionospheric plasma depletion following a rocket launch." Remote Sensing 11.14 (2019): 1734; doi: 10.3390/rs11141734
+
+[3] Fratarcangeli, F. et al. "The variometric approach to real-time high-frequency geodesy." 
+Rendiconti Lincei. Scienze Fisiche e Naturali 29.1 (2018): 95-108; doi: 10.1007/s12210-018-0708-5
 
 ### Contacts ###
 

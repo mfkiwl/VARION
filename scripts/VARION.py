@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # \file VARION.py
-# \brief This script implements the VARION algorithm for real-time 
+#  This script implements the VARION algorithm for real-time 
 #  detection of sTEC variations using GNSS observations.
-# \author Giorgio Savastano, 23.10.2015. giorgio.savastano[AT]uniroma1.it
+# author Giorgio Savastano, 23.10.2015. giorgio.savastano[AT]gmail.com
+# modified by Michela Ravanelli, michela.ravanelli[AT]uniroma1.it
 #
 # Notice: Please acknowledge the use of the above software in any publications:
 #    ``VARION software was provided by G. Savastano et al.,
@@ -20,7 +21,7 @@
 # 
 # -------------------------------------------------------------------------
 #
-# Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
+# Copyright (C) 2015-2020  (see AUTHORS file for a list of contributors)
 #
 # VARION is a opean source software for GNSS processing
 #
@@ -51,10 +52,13 @@ import myFunc as mF
 import mySatsFunc as mSF
 import RinexClass as RC
 
-parser = argparse.ArgumentParser(prog="VARION.py", description="VARION.py is a script that process RINEX obs files" \
-									  " and apply the VARION algorithm in order to obtain sTEC measuraments.\n" \
-									  " author: Giorgio Savastano - giorgio.savastano@uniroma1.it")
-									  
+import pdb
+
+parser = argparse.ArgumentParser(prog="VARION.py", description= """VARION.py is a script that process RINEX obs files
+									   and apply the VARION algorithm in order to obtain sTEC measuraments.
+									  author: Giorgio Savastano - giorgiosavastano@gmail.com 
+ 									  author:  Michela Ravanelli - michela.ravanelli@uniroma1.it """)
+
 parser.add_argument("-staz", type=str, nargs='*', default="all", dest="stazName", help="This argument determines the station(s) will be processed." \
 									  " By default, this parameter is set to process all the RINEX observation files in the working folder (/obs). ")
 						   
@@ -71,9 +75,13 @@ parser.add_argument("-sat", type=str, nargs='*', default=0, dest="satNumber", he
 
 parser.add_argument('-brdc', dest="brdcOrb",  action='store_true', help="This argument set the processing with the brdc file")       
 
-parser.add_argument('-height', type=int, default=350, dest="hIono",  help='This argument determines the ionospheric shell height'\
-										'By default, this value is set to 350 km')             
+parser.add_argument('-height', type=int, default=300, dest="hIono",  help='This argument determines the ionospheric shell height'\
+										'By default, this value is set to 300 km')             
 									   
+print "VARION is a free and open source software that processes RINEX obs files in order to estimate sTEC values."
+print "author: Giorgio Savastano - giorgiosavastano@gmail.com "
+print "author: Michela Ravanelli - michela.ravanelli@uniroma1.it"
+print " "
 ########################################################
 ## CLASSES ##
 class myStation:

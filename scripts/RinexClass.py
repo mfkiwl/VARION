@@ -692,12 +692,32 @@ class RinexFile:
 										dict_oss[str(self.obs_v2[1:][g])]=float('Nan')
 
 								l1_value_new  = (dict_oss['L1']) *lam1  
-								l2_value_new = dict_oss.get('L2',float('Nan')) *lam2 
-								c1_value_new = dict_oss.get('C1','P1')
-								s1_value_new = dict_oss.get('S1',float('Nan'))
-								s2_value_new = dict_oss.get('S2',float('Nan'))
-								c5_value_new = dict_oss.get('C5',float('Nan'))
-								l5_value_new = dict_oss.get('L5',float('Nan'))*lam5 
+								try:
+									c1_value_new = (dict_oss['C1'])
+								except KeyError:
+									c1_value_new = (dict_oss['P1'])
+								try:
+									l2_value_new = (dict_oss['L2'])*lam2
+								except KeyError:
+									l2_value_new = float('Nan')
+
+								try:
+									s1_value_new= dict_oss['S1'] 
+								except KeyError:
+									s1_value_new= float('Nan')
+								try:
+									s2_value_new= dict_oss['S2'] 
+								except KeyError:
+									s2_value_new= float('Nan')
+
+								try:
+									l5_value_new= (dict_oss['L5']) *lam5
+								except KeyError:
+									l5_value_new= float('Nan')
+								try:
+									c5_value_new= (dict_oss['C5'])
+								except KeyError:
+									c5_value_new= float('Nan')
 								
  								
 
@@ -743,14 +763,34 @@ class RinexFile:
 											dict_oss[str(self.obs_v2[ee:][g])]=float('Nan')
 
 
-								
+
 								l1_value_new  = (dict_oss['L1']) *lam1  
-								l2_value_new =  (dict_oss['L2']) *lam2 
-								c1_value_new = dict_oss.get('C1','P1')
-								s1_value_new = dict_oss.get('S1',float('Nan'))
-								s2_value_new = dict_oss.get('S2',float('Nan'))
-								c5_value_new = dict_oss.get('C5',float('Nan'))
-								l5_value_new = dict_oss.get('L5',float('Nan'))*lam5 
+								try:
+									c1_value_new = (dict_oss['C1'])
+								except KeyError:
+									c1_value_new = (dict_oss['P1'])
+								try:
+									l2_value_new = (dict_oss['L2'])*lam2
+								except KeyError:
+									l2_value_new = float('Nan')
+
+								try:
+									s1_value_new= dict_oss['S1'] 
+								except KeyError:
+									s1_value_new= float('Nan')
+								try:
+									s2_value_new= dict_oss['S2'] 
+								except KeyError:
+									s2_value_new= float('Nan')
+
+								try:
+									l5_value_new= (dict_oss['L5']) *lam5
+								except KeyError:
+									l5_value_new= float('Nan')
+								try:
+									c5_value_new= (dict_oss['C5'])
+								except KeyError:
+									c5_value_new= float('Nan')
 								
 								
 

@@ -1,5 +1,8 @@
 # VARION
 
+VARION is a free and open source software that processes RINEX obs files in order to estimate sTEC values.
+
+
 ## HOW TO USE VARION
 
 Download your RINEX files and copy them in the "/obs" dir. Put in the same folder also the navigation file (e.g. brdc????.??n).
@@ -25,6 +28,17 @@ Then move with the terminal into the "/script" dir and execute the VARION script
 - Numpy
 - Pandas
 
+### References ###
+
+[1] Savastano, G. et al. Real-Time Detection of Tsunami Ionospheric Disturbances with a Stand-Alone GNSS Receiver: 
+A Preliminary Feasibility Demonstration. Sci. Rep. 7, 46607; doi: 10.1038/srep46607 (2017)
+
+[2] Savastano, G. et al. "Advantages of geostationary satellites for ionospheric anomaly studies: 
+Ionospheric plasma depletion following a rocket launch." Remote Sensing 11.14 (2019): 1734; doi: 10.3390/rs11141734
+
+[3] Fratarcangeli, F. et al. "The variometric approach to real-time high-frequency geodesy." 
+Rendiconti Lincei. Scienze Fisiche e Naturali 29.1 (2018): 95-108; doi: 10.1007/s12210-018-0708-5
+
 ### Contacts ###
 
-giorgio.savastano@uniroma1.it or giorgio.savastano@jpl.nasa.gov
+michela.ravanelli@uniroma1.it or giorgiosavastano@gmail.com

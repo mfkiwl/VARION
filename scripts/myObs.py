@@ -2,7 +2,7 @@
 #
 # -------------------------------------------------------------------------
 #
-# Copyright (C) 2015-2016  (see AUTHORS file for a list of contributors)
+# Copyright (C) 2015-2020  (see AUTHORS file for a list of contributors)
 #
 # VARION is a opean source software for GNSS processing
 #
